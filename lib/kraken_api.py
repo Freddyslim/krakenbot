@@ -8,7 +8,7 @@ import functools
 
 import requests
 
-import lib
+import lib.lib as lib
 
 API_URL = "https://api.kraken.com"
 
