@@ -49,7 +49,12 @@ def _run_user_data(api_key: str, api_sec: str) -> None:
             continue
         try:
             data = func(api_key, api_sec)
-            lib.display_data(data)
+            # pick display function depending on result shape
+            result = data.get("result") if isinstance(data, dict) else None
+            if isinstance(result, dict) and all(isinstance(v, dict) for v in result.values()):
+                lib.display_data(data)
+            else:
+                lib.display_data_balance(data)
         except Exception as exc:
             print(f"Request failed: {exc}")
 
