@@ -22,7 +22,6 @@ def select_api() -> str | None:
         return None
     return choice
 
-
 def main() -> None:
     while True:
         print("\nKRAKEN REMOTE \n")
