@@ -98,12 +98,26 @@ class LiveTraderBot:
         self.target_sell_price = data.get("target_sell_price")
         self.trade_history = data.get("trade_history", [])
 
+    def _format_numbers(self, info: Dict) -> Dict:
+        """Round numeric values for nicer log output."""
+        formatted: Dict = {}
+        for key, value in info.items():
+            if isinstance(value, float):
+                if key == "position":
+                    formatted[key] = round(value, 6)
+                else:
+                    formatted[key] = round(value, 2)
+            else:
+                formatted[key] = value
+        return formatted
+
     def _log(self, info: Dict) -> None:
+        formatted = self._format_numbers(info)
         if self.settings.debug:
-            print(json.dumps(info, indent=2, ensure_ascii=False))
+            print(json.dumps(formatted, indent=2, ensure_ascii=False))
         try:
             with open(self.log_file, "a") as fh:
-                fh.write(json.dumps(info, indent=2, ensure_ascii=False))
+                fh.write(json.dumps(formatted, indent=2, ensure_ascii=False))
                 fh.write("\n")
         except OSError:
             pass
