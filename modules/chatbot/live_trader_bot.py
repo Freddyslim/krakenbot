@@ -41,8 +41,10 @@ class LiveTraderBot:
         self.settings = settings
         self.position = 0.0
         self.cash = settings.trade_amount
+        self.initial_balance = settings.trade_amount
         self.last_buy_price: float | None = None
         self.target_sell_price: float | None = None
+        self.trade_history: list[dict] = []
         self.state_file = "output/live_trader_state.json"
         self.telegram_token: str | None = None
         self.telegram_chat_id: str | None = None
@@ -56,6 +58,7 @@ class LiveTraderBot:
                 fh.write("\n")
         except OSError:
             pass
+        self._load_state()
         if self.settings.telegram_enabled:
             try:
                 with open(self.settings.telegram_settings_file, "r") as fh:
@@ -78,6 +81,22 @@ class LiveTraderBot:
                 json.dump(info, fh, indent=2)
         except OSError:
             pass
+
+    def _load_state(self) -> None:
+        """Load previous session state if settings match."""
+        try:
+            with open(self.state_file, "r") as fh:
+                data = json.load(fh)
+        except FileNotFoundError:
+            return
+        if data.get("settings") != asdict(self.settings):
+            return
+        self.position = data.get("position", self.position)
+        self.cash = data.get("cash", self.cash)
+        self.initial_balance = data.get("initial_balance", self.initial_balance)
+        self.last_buy_price = data.get("last_buy_price")
+        self.target_sell_price = data.get("target_sell_price")
+        self.trade_history = data.get("trade_history", [])
 
     def _log(self, info: Dict) -> None:
         if self.settings.debug:
@@ -105,7 +124,8 @@ class LiveTraderBot:
             f"Position: {info.get('position'):.6f}",
             f"Bargeld: {info.get('cash'):.2f}",
             f"Verkaufsziel: {info.get('target_sell_price')}",
-            f"Nächster Kauf bei: {info.get('next_buy_price')}",
+            f"N\u00e4chster Kauf bei: {info.get('next_buy_price')}",
+            f"Profit: {info.get('profit'):.2f}",
         ]
         if info.get("expected_next_order_time"):
             text_lines.append(
@@ -157,24 +177,36 @@ class LiveTraderBot:
             long_ma = float(df["Close"].rolling(window=25).mean().iloc[-1])
 
             action = None
+            timestamp = pd.Timestamp.utcnow().isoformat()
             if self.position == 0 and short_ma > long_ma and price <= short_ma:
-                self.position = self.cash / price
+                qty = self.cash / price
+                self.position = qty
                 self.cash = 0.0
                 self.last_buy_price = price
                 self.target_sell_price = price * (1 + self.settings.profit_target_pct / 100)
                 action = f"BUY {self.position:.6f} at {price:.2f}"
+                self.trade_history.append({"action": "BUY", "price": price, "qty": qty, "timestamp": timestamp})
             elif self.position > 0 and price >= (self.target_sell_price or 0):
+                qty = self.position
                 self.cash = self.position * price
                 self.position = 0.0
+                profit_trade = (price - (self.last_buy_price or price)) * qty
                 action = f"SELL at {price:.2f}"
+                self.trade_history.append({"action": "SELL", "price": price, "qty": qty, "timestamp": timestamp, "profit": profit_trade})
+                sells = [t for t in self.trade_history if t.get("action") == "SELL"]
+                if sells:
+                    avg_profit = sum(t.get("profit", 0) for t in sells) / len(sells)
+                    self.settings.profit_target_pct = max(0.5, min(5.0, self.settings.profit_target_pct + avg_profit / 100))
                 self.target_sell_price = None
 
             next_target = (
                 short_ma if self.position == 0 else self.target_sell_price
             )
             eta_ts = self._estimate_time_to_target(price, prev_price, next_target)
+            current_value = self.cash + self.position * price
+            profit = current_value - self.initial_balance
             info = {
-                "timestamp": pd.Timestamp.utcnow().isoformat(),
+                "timestamp": timestamp,
                 "price": price,
                 "short_ma": short_ma,
                 "long_ma": long_ma,
@@ -186,9 +218,21 @@ class LiveTraderBot:
                 "expected_next_order_time": eta_ts.isoformat() if eta_ts else None,
                 "expected_action": "BUY" if self.position == 0 else "SELL",
                 "action": action,
+                "profit": profit,
             }
 
-            self._write_state(info)
+            state = {
+                "settings": asdict(self.settings),
+                "position": self.position,
+                "cash": self.cash,
+                "last_buy_price": self.last_buy_price,
+                "target_sell_price": self.target_sell_price,
+                "trade_history": self.trade_history,
+                "initial_balance": self.initial_balance,
+                "timestamp": timestamp,
+            }
+
+            self._write_state(state)
             self._log(info)
             self._notify(info)
             time.sleep(self.settings.check_interval)
