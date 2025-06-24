@@ -33,32 +33,32 @@ kraken_request_menu_items = {
 user_data_menu_items = {
     1: 'Get Account Balance',
     2: 'Get Trade Balance',
-    # 3: 'Get Open Orders',
-    # 4: 'Get Closed Orders',
-    # 5: 'Query Orders Info',
-    # 6: 'Get Trades History',
-    # 7: 'Query Trades Infos',
-    # 8: 'Get Open Positions',
-    # 9: 'Get Ledgers Info',
-    # 10: 'Query Ledgers',
-    # 11: 'Get Trade Volume',
-    # 12: 'Request Export Report',
+    3: 'Get Open Orders',
+    4: 'Get Closed Orders',
+    5: 'Query Orders Info',
+    6: 'Get Trades History',
+    7: 'Query Trades Infos',
+    8: 'Get Open Positions',
+    9: 'Get Ledgers Info',
+    10: 'Query Ledgers',
+    11: 'Get Trade Volume',
+    12: 'Request Export Report',
     99: 'Zurück'
 }
 # functions
 user_data_requests = {
     '1': kraken_api.get_acc_balance,
     '2': kraken_api.get_trade_balance,
-    # '3': kraken_api.get_open_orders,
-    # '4': kraken_api.get_closed_orders,
-    # '5': kraken_api.query_orders_info,
-    # '6': kraken_api.get_trades_history,
-    # '7': kraken_api.query_trades_info,
-    # '8': kraken_api.get_open_positions,
-    # '9': kraken_api.get_ledgers_info,
-    # '10': kraken_api.query_ledgers_info,
-    # '11': kraken_api.get_trade_volume,
-    # '12': kraken_api.request_export_report
+    '3': kraken_api.get_open_orders,
+    '4': kraken_api.get_closed_orders,
+    '5': lambda k, s: kraken_api.query_orders_info(input('TXID: '), k, s),
+    '6': kraken_api.get_trades_history,
+    '7': lambda k, s: kraken_api.query_trades_info(input('TXID: '), k, s),
+    '8': kraken_api.get_open_positions,
+    '9': kraken_api.get_ledgers_info,
+    '10': lambda k, s: kraken_api.query_ledgers_info(input('Ledger ID: '), k, s),
+    '11': kraken_api.get_trade_volume,
+    '12': lambda k, s: kraken_api.request_export_report(input('Report type: '), k, s),
 }
 
 ################## WITHDRAW ADRESSES #################
