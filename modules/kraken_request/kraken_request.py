@@ -16,7 +16,11 @@ def run(api_name: str) -> None:
     with open(filename, "r") as fh:
         data = json.load(fh)
 
-    api_key, api_sec = kraken_api.get_api_pair(data, api_name)
+    try:
+        api_key, api_sec = kraken_api.get_api_pair(data, api_name)
+    except ValueError as exc:
+        print(exc)
+        return
 
     while True:
         print("KRAKEN REQUESTS:\n")
@@ -51,5 +55,5 @@ def _run_user_data(api_key: str, api_sec: str) -> None:
 
 
 if __name__ == "__main__":
-    from __main__ import api_name
-    run(api_name)
+    api_id = input("API ID: ")
+    run(api_id)

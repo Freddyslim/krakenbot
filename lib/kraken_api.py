@@ -69,3 +69,43 @@ def get_trade_balance(api_key: str, api_sec: str) -> Dict:
 
 def ticker(pair: str = "XBTUSD") -> Dict:
     return public_request("Ticker", {"pair": pair})
+
+
+def get_open_orders(api_key: str, api_sec: str) -> Dict:
+    return private_request("OpenOrders", {}, api_key, api_sec)
+
+
+def get_closed_orders(api_key: str, api_sec: str) -> Dict:
+    return private_request("ClosedOrders", {}, api_key, api_sec)
+
+
+def query_orders_info(txid: str, api_key: str, api_sec: str) -> Dict:
+    return private_request("QueryOrders", {"txid": txid}, api_key, api_sec)
+
+
+def get_trades_history(api_key: str, api_sec: str) -> Dict:
+    return private_request("TradesHistory", {}, api_key, api_sec)
+
+
+def query_trades_info(txid: str, api_key: str, api_sec: str) -> Dict:
+    return private_request("QueryTrades", {"txid": txid}, api_key, api_sec)
+
+
+def get_open_positions(api_key: str, api_sec: str) -> Dict:
+    return private_request("OpenPositions", {}, api_key, api_sec)
+
+
+def get_ledgers_info(api_key: str, api_sec: str) -> Dict:
+    return private_request("Ledgers", {}, api_key, api_sec)
+
+
+def query_ledgers_info(id_: str, api_key: str, api_sec: str) -> Dict:
+    return private_request("QueryLedgers", {"id": id_}, api_key, api_sec)
+
+
+def get_trade_volume(api_key: str, api_sec: str) -> Dict:
+    return private_request("TradeVolume", {}, api_key, api_sec)
+
+
+def request_export_report(report: str, api_key: str, api_sec: str) -> Dict:
+    return private_request("AddExport", {"report": report}, api_key, api_sec)
