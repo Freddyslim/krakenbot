@@ -1,135 +1,71 @@
 import base64
 import hashlib
 import hmac
+import json
 import time
 import urllib.parse
-from typing import Any, Dict, Optional
-import functools
+from typing import Dict, Tuple
 
 import requests
 
-import lib.lib as lib
-
 API_URL = "https://api.kraken.com"
 
-# Known public and private method names as defined by Kraken's REST API.
-PUBLIC_METHODS = {
-    "Time",
-    "SystemStatus",
-    "Assets",
-    "AssetPairs",
-    "Ticker",
-    "OHLC",
-    "Depth",
-    "Trades",
-    "Spread",
-}
 
-PRIVATE_METHODS = {
-    "Balance",
-    "TradeBalance",
-    "OpenOrders",
-    "ClosedOrders",
-    "QueryOrders",
-    "TradesHistory",
-    "QueryTrades",
-    "OpenPositions",
-    "Ledgers",
-    "QueryLedgers",
-    "TradeVolume",
-    "AddOrder",
-    "CancelOrder",
-    "AddExport",
-    "GetExportReportStatus",
-    "RetrieveExport",
-    "RemoveExport",
-    "Withdraw",
-}
+def load_credentials(filename: str = "config/api/kraken_key.json") -> Dict:
+    """Load API credentials from a JSON file."""
+    try:
+        with open(filename, "r") as fh:
+            return json.load(fh)
+    except FileNotFoundError:
+        return {}
 
 
-def get_api_pair(data: Dict[str, Dict[str, str]], api_name: str):
-    """Return API key and secret for the given API profile."""
-    for key in data:
-        if data[key].get("name") == api_name:
-            return data[key].get("api_key"), data[key].get("api_sec")
-    return None, None
+def get_api_pair(data: Dict, api_name: str) -> Tuple[str, str]:
+    """Return API key/secret pair for the given name."""
+    try:
+        api_key = data[api_name]["api_key"]
+        api_sec = data[api_name]["api_sec"]
+        return api_key, api_sec
+    except KeyError as exc:
+        raise ValueError(f"API credentials for '{api_name}' not found") from exc
 
 
-class KrakenAPI:
-    """Minimal Kraken REST API client."""
-
-    def __init__(self, api_key: Optional[str] = None, api_sec: Optional[str] = None, api_url: str = API_URL):
-        self.api_key = api_key
-        self.api_sec = api_sec
-        self.api_url = api_url.rstrip("/")
-        self.session = requests.Session()
-
-    # ------------------------------------------------------------------
-    # Internal helpers
-    # ------------------------------------------------------------------
-    def _sign(self, urlpath: str, data: Dict[str, Any]) -> str:
-        postdata = urllib.parse.urlencode(data)
-        encoded = (str(data["nonce"]) + postdata).encode()
-        message = urlpath.encode() + hashlib.sha256(encoded).digest()
-        mac = hmac.new(base64.b64decode(self.api_sec), message, hashlib.sha512)
-        return base64.b64encode(mac.digest()).decode()
-
-    def _request(self, method: str, urlpath: str, data: Optional[Dict[str, Any]] = None, *, private: bool = False):
-        if data is None:
-            data = {}
-        if private:
-            if not self.api_key or not self.api_sec:
-                raise ValueError("API key and secret required for private endpoints")
-            data["nonce"] = int(time.time() * 1000)
-            headers = {
-                "API-Key": self.api_key,
-                "API-Sign": self._sign(urlpath, data),
-            }
-            resp = self.session.post(self.api_url + urlpath, headers=headers, data=data)
-        else:
-            resp = self.session.get(self.api_url + urlpath, params=data)
-        resp.raise_for_status()
-        return resp.json()
-
-    # ------------------------------------------------------------------
-    # Public and private query helpers
-    # ------------------------------------------------------------------
-    def public(self, method: str, params: Optional[Dict[str, Any]] = None):
-        return self._request("GET", f"/0/public/{method}", params, private=False)
-
-    def private(self, method: str, params: Optional[Dict[str, Any]] = None):
-        return self._request("POST", f"/0/private/{method}", params, private=True)
-
-    # ------------------------------------------------------------------
-    # Dynamic endpoint access
-    # ------------------------------------------------------------------
-    def __getattr__(self, name: str):
-        if name in PUBLIC_METHODS:
-            return functools.partial(self.public, name)
-        if name in PRIVATE_METHODS:
-            return functools.partial(self.private, name)
-        raise AttributeError(name)
+def _sign(uri_path: str, data: Dict, secret: str) -> str:
+    postdata = urllib.parse.urlencode(data)
+    encoded = (str(data["nonce"]) + postdata).encode()
+    message = uri_path.encode() + hashlib.sha256(encoded).digest()
+    mac = hmac.new(base64.b64decode(secret), message, hashlib.sha512)
+    return base64.b64encode(mac.digest()).decode()
 
 
-# ----------------------------------------------------------------------
-# Convenience wrapper functions used by the CLI modules
-# ----------------------------------------------------------------------
-
-def ticker(pair: str = "XMREUR"):
-    api = KrakenAPI()
-    return api.Ticker({"pair": pair})
-
-
-def get_acc_balance(api_key: str, api_sec: str):
-    api = KrakenAPI(api_key, api_sec)
-    result = api.Balance()
-    lib.create_balance_table(result.get("result", {}))
-    return result
+def private_request(method: str, data: Dict, api_key: str, api_sec: str) -> Dict:
+    """Perform a signed POST request to a private Kraken API method."""
+    uri_path = f"/0/private/{method}"
+    data["nonce"] = int(1000 * time.time())
+    headers = {
+        "API-Key": api_key,
+        "API-Sign": _sign(uri_path, data, api_sec),
+    }
+    resp = requests.post(API_URL + uri_path, headers=headers, data=data)
+    return resp.json()
 
 
-def get_trade_balance(api_key: str, api_sec: str):
-    api = KrakenAPI(api_key, api_sec)
-    asset = input("Enter Währung: ")
-    result = api.TradeBalance({"asset": asset})
-    lib.create_balance_table(result.get("result", {}))
-    return result
+def public_request(method: str, params: Dict | None = None) -> Dict:
+    """Perform a GET request to a public Kraken API method."""
+    params = params or {}
+    resp = requests.get(API_URL + f"/0/public/{method}", params=params)
+    return resp.json()
+
+
+# Convenience wrappers -----------------------------------------------------
+
+def get_acc_balance(api_key: str, api_sec: str) -> Dict:
+    return private_request("Balance", {}, api_key, api_sec)
+
+
+def get_trade_balance(api_key: str, api_sec: str) -> Dict:
+    return private_request("TradeBalance", {}, api_key, api_sec)
+
+
+def ticker(pair: str = "XBTUSD") -> Dict:
+    return public_request("Ticker", {"pair": pair})
