@@ -1,0 +1,1097 @@
+[
+    {
+        "Name": "0x",
+        "Code": "ZRX",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "1inch",
+        "Code": "1INCH",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Aave",
+        "Code": "AAVE",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Aavegotchi",
+        "Code": "GHST",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Acala",
+        "Code": "ACA",
+        "Networks": "Acala (Polkadot)"
+    },
+    {
+        "Name": "Adventure Gold",
+        "Code": "AGLD",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Akash",
+        "Code": "AKT",
+        "Networks": "Akash\u00a0"
+    },
+    {
+        "Name": "Alchemix",
+        "Code": "ALCX",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Alchemy Pay",
+        "Code": "ACH",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Algorand",
+        "Code": "ALGO",
+        "Networks": "Algorand"
+    },
+    {
+        "Name": "Alien Worlds",
+        "Code": "TLM",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Alpha Venture DAO",
+        "Code": "ALPHA",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Altair",
+        "Code": "AIR",
+        "Networks": "Altair (Kusama)"
+    },
+    {
+        "Name": "Ambire AdEx",
+        "Code": "ADX",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Ampleforth Governance Token",
+        "Code": "FORTH",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Ankr",
+        "Code": "ANKR",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "ApeCoin",
+        "Code": "APE",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "API3",
+        "Code": "API3",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Aptos\u00a0",
+        "Code": "APT",
+        "Networks": "Aptos network"
+    },
+    {
+        "Name": "Aragon",
+        "Code": "ANT",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Arpa Chain",
+        "Code": "ARPA",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Astar",
+        "Code": "ASTR",
+        "Networks": "Astar (Polkadot)"
+    },
+    {
+        "Name": "Audius",
+        "Code": "AUDIO",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Augur",
+        "Code": "REP",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Augur v2",
+        "Code": "REPV2",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Avalanche",
+        "Code": "AVAX",
+        "Networks": "C-Chain"
+    },
+    {
+        "Name": "Axie Infinity",
+        "Code": "AXS",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Badger DAO",
+        "Code": "BADGER",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Balancer",
+        "Code": "BAL",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Bancor",
+        "Code": "BNT",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Band Protocol",
+        "Code": "BAND",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Barnbridge",
+        "Code": "BOND",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Basic Attention Token",
+        "Code": "BAT",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Basilisk",
+        "Code": "BSX",
+        "Networks": "Basilisk (Kusama)"
+    },
+    {
+        "Name": "Biconomy",
+        "Code": "BICO",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Bifrost",
+        "Code": "BNC",
+        "Networks": "Bifrost (Kusama)"
+    },
+    {
+        "Name": "Bitcoin",
+        "Code": "BTC",
+        "Networks": "Bitcoin, Lightning\u00a0"
+    },
+    {
+        "Name": "Bitcoin Cash",
+        "Code": "BCH",
+        "Networks": "Bitcoin Cash"
+    },
+    {
+        "Name": "BitDAO",
+        "Code": "BIT",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Bittorrent",
+        "Code": "BTT",
+        "Networks": "Tron (TRC-20)"
+    },
+    {
+        "Name": "Blur",
+        "Code": "BLUR",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Bluzelle",
+        "Code": "BLZ",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Boba Network",
+        "Code": "BOBA",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Bonfida",
+        "Code": "FIDA",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "Cardano",
+        "Code": "ADA",
+        "Networks": "Cardano"
+    },
+    {
+        "Name": "Cartesi",
+        "Code": "CTSI",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Celer Network",
+        "Code": "CELR",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Centrifuge",
+        "Code": "CFG",
+        "Networks": "Centrifuge (Polkadot)"
+    },
+    {
+        "Name": "Chain",
+        "Code": "XCN",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Chainlink",
+        "Code": "LINK",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Chiliz",
+        "Code": "CHZ",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Chromia",
+        "Code": "CHR",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Civic",
+        "Code": "CVC",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Compound",
+        "Code": "COMP",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Coin98",
+        "Code": "C98",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Convex Finance",
+        "Code": "CVX",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Cosmos",
+        "Code": "ATOM",
+        "Networks": "Cosmos"
+    },
+    {
+        "Name": "COTI",
+        "Code": "COTI",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Covalent",
+        "Code": "CQT",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Crust Shadow",
+        "Code": "CSM",
+        "Networks": "Crust Shadow (Kusama)"
+    },
+    {
+        "Name": "Curve",
+        "Code": "CRV",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Dai**",
+        "Code": "DAI",
+        "Networks": "Ethereum (ERC-20), Polygon network"
+    },
+    {
+        "Name": "Dash",
+        "Code": "DASH",
+        "Networks": "Dash"
+    },
+    {
+        "Name": "Decentraland",
+        "Code": "MANA",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Dent",
+        "Code": "DENT",
+        "Networks": "\u00a0Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Dogecoin",
+        "Code": "DOGE",
+        "Networks": "Dogecoin"
+    },
+    {
+        "Name": "dYdX",
+        "Code": "DYDX",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Energy Web Token",
+        "Code": "EWT",
+        "Networks": "Energy Web"
+    },
+    {
+        "Name": "Enjin Coin",
+        "Code": "ENJ",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Enzyme Finance",
+        "Code": "MLN",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "EOS",
+        "Code": "EOS",
+        "Networks": "EOS"
+    },
+    {
+        "Name": "EthereumPoW",
+        "Code": "ETHW",
+        "Networks": "Ethereum PoW network"
+    },
+    {
+        "Name": "Ethereum (\"Ether\")",
+        "Code": "ETH",
+        "Networks": "Ethereum (ERC-20), Arbitrum One Network*"
+    },
+    {
+        "Name": "Ethereum Classic",
+        "Code": "ETC",
+        "Networks": "Ethereum Classic"
+    },
+    {
+        "Name": "Ethereum Name Service",
+        "Code": "ENS",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Euler\u00a0",
+        "Code": "EUL",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Fantom",
+        "Code": "FTM",
+        "Networks": "Fantom"
+    },
+    {
+        "Name": "Fetch.ai",
+        "Code": "FET",
+        "Networks": "Fetch.ai"
+    },
+    {
+        "Name": "Filecoin",
+        "Code": "FIL",
+        "Networks": "Filecoin"
+    },
+    {
+        "Name": "Flare",
+        "Code": "FLR",
+        "Networks": "Flare network"
+    },
+    {
+        "Name": "Flow",
+        "Code": "FLOW",
+        "Networks": "Flow"
+    },
+    {
+        "Name": "Frax Share",
+        "Code": "FXS",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Gala Games",
+        "Code": "GALA",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Galxe",
+        "Code": "GAL",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Gari Network",
+        "Code": "GARI",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "GensoKishi Metaverse",
+        "Code": "MV",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Gitcoin",
+        "Code": "GTC",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Gnosis",
+        "Code": "GNO",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Green Satoshi Token",
+        "Code": "GST",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "Harvest Finance",
+        "Code": "FARM",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Hashflow",
+        "Code": "HFT",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "HydraDX",
+        "Code": "HDX",
+        "Networks": "HydraDX network"
+    },
+    {
+        "Name": "ICON",
+        "Code": "ICX",
+        "Networks": "ICON"
+    },
+    {
+        "Name": "IDEX",
+        "Code": "IDEX",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "iExec",
+        "Code": "RLC",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Immutable X",
+        "Code": "IMX",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Injective Protocol",
+        "Code": "INJ",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Integritee",
+        "Code": "TEER",
+        "Networks": "Integritee (Kusama)"
+    },
+    {
+        "Name": "Interlay",
+        "Code": "INTR",
+        "Networks": "Interlay (Polkadot)"
+    },
+    {
+        "Name": "Internet Computer",
+        "Code": "ICP",
+        "Networks": "Internet Computer Protocol"
+    },
+    {
+        "Name": "Jasmy",
+        "Code": "JASMY",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "JUNO",
+        "Code": "JUNO",
+        "Networks": "Juno network"
+    },
+    {
+        "Name": "Karura",
+        "Code": "KAR",
+        "Networks": "Karura (Kusama)"
+    },
+    {
+        "Name": "Kava",
+        "Code": "KAVA",
+        "Networks": "Kava"
+    },
+    {
+        "Name": "KeeperDAO",
+        "Code": "ROOK",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Keep Network",
+        "Code": "KEEP",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Keep3r Network",
+        "Code": "KP3R",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "KILT",
+        "Code": "KILT",
+        "Networks": "KILT (Kusama)"
+    },
+    {
+        "Name": "Kin",
+        "Code": "KIN",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "Kintsugi",
+        "Code": "KINT",
+        "Networks": "Kintsugi (Kusama)"
+    },
+    {
+        "Name": "Kusama",
+        "Code": "KSM",
+        "Networks": "Kusama"
+    },
+    {
+        "Name": "Kyber Network",
+        "Code": "KNC",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Lido DAO",
+        "Code": "LDO",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Liechtenstein Cryptoassets Exchange",
+        "Code": "LCX",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Lisk",
+        "Code": "LSK",
+        "Networks": "Lisk"
+    },
+    {
+        "Name": "Litecoin",
+        "Code": "LTC",
+        "Networks": "Litecoin"
+    },
+    {
+        "Name": "Livepeer",
+        "Code": "LPT",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Loopring",
+        "Code": "LRC",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Maker",
+        "Code": "MKR",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Mango",
+        "Code": "MNGO",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "Marinade SOL",
+        "Code": "MSOL",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "Marlin",
+        "Code": "POND",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Mask Network",
+        "Code": "MASK",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Merit Circle",
+        "Code": "MC",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Mina",
+        "Code": "MINA",
+        "Networks": "Mina"
+    },
+    {
+        "Name": "Mirror Protocol",
+        "Code": "MIR",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Monero",
+        "Code": "XMR",
+        "Networks": "Monero"
+    },
+    {
+        "Name": "Moonbeam",
+        "Code": "GLMR",
+        "Networks": "Moonbeam (Polkadot)"
+    },
+    {
+        "Name": "Moonriver",
+        "Code": "MOVR",
+        "Networks": "Moonriver (Kusama)"
+    },
+    {
+        "Name": "Multichain",
+        "Code": "MULTI",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "MultiversX",
+        "Code": "EGLD",
+        "Networks": "MultiversX network"
+    },
+    {
+        "Name": "MXC",
+        "Code": "MXC",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "My Neighbor Alice",
+        "Code": "ALICE",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Nano",
+        "Code": "NANO",
+        "Networks": "Nano"
+    },
+    {
+        "Name": "Near Protocol",
+        "Code": "NEAR",
+        "Networks": "Near network"
+    },
+    {
+        "Name": "Nodle",
+        "Code": "NODL",
+        "Networks": "Nodle (Polkadot)"
+    },
+    {
+        "Name": "Numeraire",
+        "Code": "NMR",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Nym",
+        "Code": "NYM",
+        "Networks": "NYM network"
+    },
+    {
+        "Name": "Ocean",
+        "Code": "OCEAN",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "OMG Network",
+        "Code": "OMG",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Orca",
+        "Code": "ORCA",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "Orchid",
+        "Code": "OXT",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Origin Protocol",
+        "Code": "OGN",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Oxygen",
+        "Code": "OXY",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "Parallel Finance",
+        "Code": "PARA",
+        "Networks": "Parallel Finance (Polkadot)"
+    },
+    {
+        "Name": "PAX Gold",
+        "Code": "PAXG",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Perpetual Protocol",
+        "Code": "PERP",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Phala",
+        "Code": "PHA",
+        "Networks": "Khala (Kusama)"
+    },
+    {
+        "Name": "PlayDapp",
+        "Code": "PLA",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Polkadot",
+        "Code": "DOT",
+        "Networks": "Polkadot"
+    },
+    {
+        "Name": "Polkastarter",
+        "Code": "POLS",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Polygon",
+        "Code": "MATIC",
+        "Networks": "Ethereum (ERC-20), Polygon network"
+    },
+    {
+        "Name": "Powerledger",
+        "Code": "POWR",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "pSTAKE",
+        "Code": "PSTAKE",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Qtum",
+        "Code": "QTUM",
+        "Networks": "Qtum"
+    },
+    {
+        "Name": "Quant",
+        "Code": "QNT",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Radicle",
+        "Code": "RAD",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Rarible",
+        "Code": "RARI",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Raydium",
+        "Code": "RAY",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "REN Protocol",
+        "Code": "REN",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Render",
+        "Code": "RNDR",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Request",
+        "Code": "REQ",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Ripple",
+        "Code": "XRP",
+        "Networks": "Ripple"
+    },
+    {
+        "Name": "Robonomics",
+        "Code": "XRT",
+        "Networks": "Robonomics (Kusama)"
+    },
+    {
+        "Name": "Rocket Pool",
+        "Code": "RPL",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Rubic",
+        "Code": "RBC",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Saber",
+        "Code": "SBR",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "Samoyed Coin",
+        "Code": "SAMO",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "Secret",
+        "Code": "SCRT",
+        "Networks": "Secret network"
+    },
+    {
+        "Name": "SelfKey",
+        "Code": "KEY",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Serum",
+        "Code": "SRM",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "Shiba Inu",
+        "Code": "SHIB",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Shiden",
+        "Code": "SDN",
+        "Networks": "Shiden (Kusama)"
+    },
+    {
+        "Name": "Siacoin",
+        "Code": "SC",
+        "Networks": "Siacoin"
+    },
+    {
+        "Name": "Solana",
+        "Code": "SOL",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "Songbird",
+        "Code": "SGB",
+        "Networks": "Songbird"
+    },
+    {
+        "Name": "Spell Token",
+        "Code": "SPELL",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Stacks",
+        "Code": "STX",
+        "Networks": "Stacks network"
+    },
+    {
+        "Name": "Stafi Protocol",
+        "Code": "FIS",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Star Atlas",
+        "Code": "ATLAS",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "Star Atlas DAO",
+        "Code": "POLIS",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "Stargate Finance",
+        "Code": "STG",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Stellar Lumens",
+        "Code": "XLM",
+        "Networks": "Lumen network"
+    },
+    {
+        "Name": "Step Finance",
+        "Code": "STEP",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "STEPN",
+        "Code": "GMT",
+        "Networks": "Solana (SPL)"
+    },
+    {
+        "Name": "Storj",
+        "Code": "STORJ",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "SuperFarm",
+        "Code": "SUPER",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "SuperRare",
+        "Code": "RARE",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Sushi",
+        "Code": "SUSHI",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Swipe****",
+        "Code": "SXP",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Synapse",
+        "Code": "SYN",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Synthetix",
+        "Code": "SNX",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "tBTC**",
+        "Code": "TBTC",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Terra 2.0",
+        "Code": "LUNA2",
+        "Networks": "Terra"
+    },
+    {
+        "Name": "Terra Classic",
+        "Code": "LUNA",
+        "Networks": "Terra"
+    },
+    {
+        "Name": "TerraUSD Classic**",
+        "Code": "UST",
+        "Networks": "Terra"
+    },
+    {
+        "Name": "Terra Virtual Kolect",
+        "Code": "TVK",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Tether**",
+        "Code": "USDT",
+        "Networks": "ERC-20, TRC-20, Polygon network"
+    },
+    {
+        "Name": "Tezos",
+        "Code": "XTZ",
+        "Networks": "Tezos"
+    },
+    {
+        "Name": "The Graph",
+        "Code": "GRT",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "The Sandbox",
+        "Code": "SAND",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Thorchain",
+        "Code": "RUNE",
+        "Networks": "Thorchain"
+    },
+    {
+        "Name": "Threshold",
+        "Code": "T",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Tokemak",
+        "Code": "TOKE",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Tribe",
+        "Code": "TRIBE",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Tron",
+        "Code": "TRX",
+        "Networks": "Tron (TRC-20)"
+    },
+    {
+        "Name": "TrueFi",
+        "Code": "TRU",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Unifi Protocol DAO",
+        "Code": "UNFI",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Uniswap",
+        "Code": "UNI",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Universal Market Access",
+        "Code": "UMA",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "USD Coin**",
+        "Code": "USDC",
+        "Networks": "ERC-20, SPL, TRC-20, Polygon network"
+    },
+    {
+        "Name": "WAVES",
+        "Code": "WAVES",
+        "Networks": "WAVES"
+    },
+    {
+        "Name": "Woo Network",
+        "Code": "WOO",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Wrapped Bitcoin***",
+        "Code": "WBTC",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Wrapped Ether****",
+        "Code": "WETH",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Wrapped Axelar",
+        "Code": "WAXL",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Yearn Finance",
+        "Code": "YFI",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Yield Guild Games",
+        "Code": "YGG",
+        "Networks": "Ethereum (ERC-20)"
+    },
+    {
+        "Name": "Zcash",
+        "Code": "ZEC",
+        "Networks": "Zcash"
+    }
+]

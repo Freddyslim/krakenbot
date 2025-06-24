@@ -1,0 +1,19 @@
+import pandas as pd
+import json
+
+def excel_to_json(excel_file, sheet_name, json_file):
+    # Read Excel file into a pandas dataframe
+    df = pd.read_excel(excel_file, sheet_name=sheet_name)
+    
+    # Convert dataframe to a dictionary
+    data_dict = df.to_dict(orient='records')
+    
+    # Write dictionary to a JSON file
+    with open(json_file, 'w') as f:
+        json.dump(data_dict, f, indent=4)
+
+excel_file = 'data\kraken_currencies.xlsx'
+sheet_name = 'currencies'
+json_file = 'output\kraken_currencies.json'
+
+excel_to_json(excel_file, sheet_name, json_file)
