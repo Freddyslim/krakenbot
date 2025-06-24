@@ -10,3 +10,4 @@ config/chatbot/elliott_wave_settings.json
 
 # Misc
 *.log
+log/

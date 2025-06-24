@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import json
+import os
 import time
-from dataclasses import dataclass
-from typing import Dict
+from dataclasses import dataclass, asdict
+from typing import Dict, Optional
 
 import pandas as pd
 import yfinance as yf
@@ -45,6 +46,16 @@ class LiveTraderBot:
         self.state_file = "output/live_trader_state.json"
         self.telegram_token: str | None = None
         self.telegram_chat_id: str | None = None
+        self.log_dir = "log"
+        os.makedirs(self.log_dir, exist_ok=True)
+        timestamp = pd.Timestamp.utcnow().strftime("%Y%m%d_%H%M%S")
+        self.log_file = os.path.join(self.log_dir, f"{timestamp}.log")
+        try:
+            with open(self.log_file, "w") as fh:
+                json.dump({"settings": asdict(self.settings)}, fh, indent=2)
+                fh.write("\n")
+        except OSError:
+            pass
         if self.settings.telegram_enabled:
             try:
                 with open(self.settings.telegram_settings_file, "r") as fh:
@@ -70,7 +81,13 @@ class LiveTraderBot:
 
     def _log(self, info: Dict) -> None:
         if self.settings.debug:
-            print(json.dumps(info, indent=2))
+            print(json.dumps(info, indent=2, ensure_ascii=False))
+        try:
+            with open(self.log_file, "a") as fh:
+                fh.write(json.dumps(info, indent=2, ensure_ascii=False))
+                fh.write("\n")
+        except OSError:
+            pass
 
     def _notify(self, info: Dict) -> None:
         if not self.settings.telegram_enabled:
@@ -81,15 +98,19 @@ class LiveTraderBot:
 
         text_lines = [
             f"{info.get('timestamp')}",
-            f"Action: {info.get('action') or 'HOLD'}",
-            f"Price: {info.get('price'):.2f}",
-            f"Short MA: {info.get('short_ma'):.2f}",
-            f"Long MA: {info.get('long_ma'):.2f}",
+            f"Aktion: {info.get('action') or 'keine'}",
+            f"Preis: {info.get('price'):.2f}",
+            f"Kurzfristiger MA: {info.get('short_ma'):.2f}",
+            f"Langfristiger MA: {info.get('long_ma'):.2f}",
             f"Position: {info.get('position'):.6f}",
-            f"Cash: {info.get('cash'):.2f}",
-            f"Target sell: {info.get('target_sell_price')}",
-            f"Next buy: {info.get('next_buy_price')}",
+            f"Bargeld: {info.get('cash'):.2f}",
+            f"Verkaufsziel: {info.get('target_sell_price')}",
+            f"Nächster Kauf bei: {info.get('next_buy_price')}",
         ]
+        if info.get("expected_next_order_time"):
+            text_lines.append(
+                f"Nächste Order ({info.get('expected_action')}) voraussichtlich gegen {info['expected_next_order_time']}"
+            )
         text = "\n".join(text_lines)
         try:
             requests.post(
@@ -99,6 +120,30 @@ class LiveTraderBot:
             )
         except requests.RequestException:
             pass
+        self._log({"telegram_message": text})
+
+    def _interval_seconds(self) -> int:
+        try:
+            return int(pd.Timedelta(self.settings.interval).total_seconds())
+        except ValueError:
+            return 0
+
+    def _estimate_time_to_target(
+        self, price: float, prev_price: float, target: Optional[float]
+    ) -> Optional[pd.Timestamp]:
+        if target is None:
+            return None
+        delta = price - prev_price
+        if delta == 0:
+            return None
+        if (delta > 0 and target <= price) or (delta < 0 and target >= price):
+            return pd.Timestamp.utcnow()
+        if (delta > 0 and target > price) or (delta < 0 and target < price):
+            intervals = (target - price) / delta
+            if intervals > 0:
+                seconds = intervals * self._interval_seconds()
+                return pd.Timestamp.utcnow() + pd.Timedelta(seconds=seconds)
+        return None
 
     def run(self) -> None:
         print(
@@ -107,6 +152,7 @@ class LiveTraderBot:
         while True:
             df = self._fetch_data()
             price = float(df["Close"].iloc[-1])
+            prev_price = float(df["Close"].iloc[-2]) if len(df) > 1 else price
             short_ma = float(df["Close"].rolling(window=7).mean().iloc[-1])
             long_ma = float(df["Close"].rolling(window=25).mean().iloc[-1])
 
@@ -123,6 +169,10 @@ class LiveTraderBot:
                 action = f"SELL at {price:.2f}"
                 self.target_sell_price = None
 
+            next_target = (
+                short_ma if self.position == 0 else self.target_sell_price
+            )
+            eta_ts = self._estimate_time_to_target(price, prev_price, next_target)
             info = {
                 "timestamp": pd.Timestamp.utcnow().isoformat(),
                 "price": price,
@@ -133,6 +183,8 @@ class LiveTraderBot:
                 "last_buy_price": self.last_buy_price,
                 "target_sell_price": self.target_sell_price,
                 "next_buy_price": short_ma if self.position == 0 else None,
+                "expected_next_order_time": eta_ts.isoformat() if eta_ts else None,
+                "expected_action": "BUY" if self.position == 0 else "SELL",
                 "action": action,
             }
 
