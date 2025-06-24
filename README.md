@@ -70,6 +70,7 @@ menu interface. A few examples are:
 - **kraken_request** – make individual API requests
 - **telegram_bot** – minimal read-only Telegram bot
 - **generate-trades-history-csv** – export trade history into CSV format
+- **chatbot** – run small strategy bots fetching data from Kraken and Yahoo Finance
 
 ### Output Folder
 
@@ -90,6 +91,18 @@ python -m modules.telegram_bot.telegram_bot
 Available commands are `/balance` to show your account balances and `/ticker` to
 display the current price for a currency pair. More functionality can easily be
 added.
+
+## Chatbots
+
+The `chatbot` module contains small strategy bots. An example `TickerBot`
+fetches price data from both Kraken and Yahoo Finance and prints the values.
+Start it from the main menu or directly via:
+
+```bash
+python -m modules.chatbot.chatbot
+```
+
+You can customise the trading pair and symbol before the bot runs.
 
 ## Security Notes
 
