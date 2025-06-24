@@ -11,11 +11,28 @@ The original repository stored real API credentials in `config/api/kraken_key.js
 - Python 3.10+
 - The packages listed in `requirements.txt` (generate it from your environment or adjust as needed)
 
-Install dependencies with:
+To keep the dependencies separated from the rest of your system we recommend creating a
+Python *virtual environment* in the project folder. Follow these steps:
 
-```bash
-pip install -r requirements.txt
-```
+1. Open a terminal and change to the folder that contains this README.
+2. Create the environment:
+   ```bash
+   python3 -m venv .venv
+   ```
+3. Activate the environment:
+   - **Windows**
+     ```cmd
+     .venv\Scripts\activate
+     ```
+   - **macOS/Linux**
+     ```bash
+     source .venv/bin/activate
+     ```
+4. Install the required packages:
+   ```bash
+   pip install -r requirements.txt
+   ```
+5. When you are finished you can leave the environment by running `deactivate`.
 
 ## Configuration
 
@@ -37,6 +54,8 @@ python main.py
 ```
 
 From there you can manage API keys, withdraw addresses and perform a limited set of Kraken requests. Many features are incomplete and should be reviewed before real trading use.
+
+For a step-by-step guide on starting and using the menu see [BOT_USAGE.md](BOT_USAGE.md).
 
 ## Security Notes
 
