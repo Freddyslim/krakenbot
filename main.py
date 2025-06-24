@@ -5,6 +5,7 @@ from modules.api_editor import api_list
 from modules.withdraw_adress import withdraw_adresses
 from modules.kraken_request import kraken_request
 from modules.telegram_bot import telegram_bot
+from modules.chatbot import run as chatbot_run
 import lib.kraken_api as kraken_api
 
 
@@ -38,6 +39,8 @@ def main() -> None:
                 kraken_request.run(api_id)
         elif option == 4:
             telegram_bot.run()
+        elif option == 5:
+            chatbot_run()
         elif option == 99:
             print()
             break

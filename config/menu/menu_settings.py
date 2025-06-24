@@ -14,6 +14,7 @@ main_menu_items = {
     2: 'Bearbeiten der withdraw Adressen',
     3: 'Kraken Request',
     4: 'Telegram Bot starten',
+    5: 'Chatbots',
     99: 'Zurück'
 }
 ############## kraken request menu ##############

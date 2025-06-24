@@ -16,6 +16,8 @@ This repository contains a simple command line tool that interacts with the Krak
    1 - Manage API keys
    2 - Manage withdraw addresses
    3 - Make a Kraken request
+   4 - Telegram bot
+   5 - Chatbots
    99 - Exit
    ```
 4. Enter the number of the option you want to use and press `Enter`.

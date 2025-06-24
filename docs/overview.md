@@ -6,10 +6,12 @@ flowchart TD
     A --> C[Withdraw addresses]
     A --> D[Kraken requests]
     A --> E[Telegram bot]
+    A --> J[Chatbots]
     B --> F[config/api/kraken_key.json]
     C --> G[config/api/withdraw_db.json]
     E --> H[config/telegram/bot_settings.json]
     D --> I[lib/kraken_api.py]
+    J --> K[modules/chatbot]
 ```
 
 This diagram shows the high level components of the project and how they relate
