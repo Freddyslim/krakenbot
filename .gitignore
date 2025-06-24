@@ -1,0 +1,10 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# API secrets
+config/api/kraken_key.json
+config/api/withdraw_db.json
+
+# Misc
+*.log

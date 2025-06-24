@@ -1,0 +1,4 @@
+requests
+pandas
+prettytable
+PyQt5
