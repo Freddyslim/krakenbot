@@ -96,13 +96,20 @@ added.
 
 The `chatbot` module contains small strategy bots. An example `TickerBot`
 fetches price data from both Kraken and Yahoo Finance and prints the values.
+Another demo called `ElliottWaveBot` performs a very rough Elliott wave
+analysis on historical prices and simulates trades based on configurable
+criteria.
 Start it from the main menu or directly via:
 
 ```bash
 python -m modules.chatbot.chatbot
 ```
 
-You can customise the trading pair and symbol before the bot runs.
+You can customise the trading pair and symbol before the bot runs. When
+starting the Elliott wave bot you may pass a settings file path to tweak
+parameters such as analysis period, price interval and profit margin.
+See [docs/elliott_wave_bot.md](docs/elliott_wave_bot.md) for a detailed
+description of the available options.
 
 ## Security Notes
 

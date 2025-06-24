@@ -1,0 +1,8 @@
+{
+    "symbol": "BTC-USD",
+    "period": "1y",
+    "interval": "1d",
+    "profit_pct": 2.0,
+    "start_balance": 1000,
+    "wave_threshold_pct": 2.5
+}
