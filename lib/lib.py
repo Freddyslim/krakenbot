@@ -186,6 +186,9 @@ def display_data_balance(data):
     if not data:
         print('Error: No data provided')
         return
+    if 'error' in data and data['error']:
+        print('API Error:', '; '.join(data['error']))
+        return
     if 'result' not in data or not data['result']:
         print('Error: Data format is incorrect')
         return
