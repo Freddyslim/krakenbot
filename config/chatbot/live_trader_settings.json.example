@@ -1,0 +1,9 @@
+{
+    "symbol": "BTC-USD",
+    "lookback_days": 30,
+    "interval": "1h",
+    "trade_amount": 1000,
+    "profit_target_pct": 1.5,
+    "check_interval": 30,
+    "debug": true
+}

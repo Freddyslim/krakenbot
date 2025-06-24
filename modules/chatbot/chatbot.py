@@ -2,6 +2,7 @@
 
 from .base import TickerBot
 from .elliott_wave_bot import ElliottWaveBot, Settings
+from .live_trader_bot import LiveTraderBot, LiveSettings
 
 
 def run() -> None:
@@ -9,6 +10,7 @@ def run() -> None:
     print("CHATBOT DEMO")
     print("1. Run ticker bot")
     print("2. Run Elliott wave bot")
+    print("3. Run live trader bot")
     print("99. Back")
     choice = input("Option: ") or "99"
     if choice == "1":
@@ -25,6 +27,16 @@ def run() -> None:
         )
         settings = Settings.load(filename)
         bot = ElliottWaveBot(settings)
+        bot.run()
+    elif choice == "3":
+        filename = (
+            input(
+                "Settings file (default: config/chatbot/live_trader_settings.json): "
+            )
+            or "config/chatbot/live_trader_settings.json"
+        )
+        settings = LiveSettings.load(filename)
+        bot = LiveTraderBot(settings)
         bot.run()
 
 

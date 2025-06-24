@@ -59,6 +59,8 @@ From there you can manage API keys, withdraw addresses and perform a limited set
 
 For a step-by-step guide on starting and using the menu see [BOT_USAGE.md](BOT_USAGE.md).
 An overview of the project structure can be found in [docs/overview.md](docs/overview.md).
+The available helper functions for the Kraken API are summarised in
+[docs/kraken_api_reference.md](docs/kraken_api_reference.md).
 
 ### Available Modules
 
