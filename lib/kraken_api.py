@@ -19,7 +19,7 @@ import base64
 import urllib.parse
 import json
 import time
-import lib
+import lib.lib as lib
 
 # constants
 api_url = "https://api.kraken.com"
