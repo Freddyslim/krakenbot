@@ -1,6 +1,6 @@
 # LiveTraderBot
 
-`LiveTraderBot` ist ein einfacher Bot, der kontinuierlich Kursdaten aus Yahoo Finance auswertet und anhand einer Moving-Average-Strategie Kauf- und Verkaufszeitpunkte simuliert. Im Gegensatz zum `ElliottWaveBot` stoppt dieser Bot nicht nach einer Simulation, sondern läuft dauerhaft weiter und aktualisiert seine Berechnungen regelmäßig.
+`LiveTraderBot` ist ein einfacher Bot, der kontinuierlich Kursdaten aus Yahoo Finance auswertet und anhand einer Moving-Average-Strategie Kauf- und Verkaufszeitpunkte simuliert. Er verschickt dabei lediglich Handlungsempfehlungen und führt keine echten Trades aus. Im Gegensatz zum `ElliottWaveBot` stoppt dieser Bot nicht nach einer Simulation, sondern läuft dauerhaft weiter und aktualisiert seine Berechnungen regelmäßig. Aktivierst du Telegram, werden die Empfehlungen an dein Chatfenster gesendet.
 
 ## Konfiguration
 
@@ -14,7 +14,9 @@ Kopiere `config/chatbot/live_trader_settings.json.example` nach `config/chatbot/
     "trade_amount": 1000,
     "profit_target_pct": 1.5,
     "check_interval": 30,
-    "debug": true
+    "debug": true,
+    "telegram_enabled": false,
+    "telegram_settings_file": "config/telegram/bot_settings.json"
 }
 ```
 
@@ -27,6 +29,8 @@ Kopiere `config/chatbot/live_trader_settings.json.example` nach `config/chatbot/
 - **profit_target_pct** – Prozentualer Aufschlag auf den Kaufkurs, bei dem ein Verkauf erfolgen soll.
 - **check_interval** – Wie viele Sekunden zwischen zwei Aktualisierungen liegen.
 - **debug** – Wenn `true`, werden die berechneten Werte jedes Mal auf der Konsole ausgegeben.
+- **telegram_enabled** – Wenn `true`, werden Empfehlungen per Telegram verschickt.
+- **telegram_settings_file** – Pfad zur Datei mit Bot-Token und Chat-ID.
 
 Während der Laufzeit speichert der Bot seinen Zustand in `output/live_trader_state.json`. Dort findest du den aktuellen Kurs, gleitende Durchschnitte, offene Positionen und die letzte Aktion.
 
@@ -42,4 +46,4 @@ Option **3** wählt den LiveTraderBot. Anschließend kann ein abweichender Pfad 
 
 ## Funktionsweise
 
-Alle `check_interval` Sekunden ruft der Bot die jüngsten Kursdaten für das gewünschte Symbol ab. Liegt der kurzfristige gleitende Durchschnitt über dem langfristigen Durchschnitt und der aktuelle Kurs nicht wesentlich darüber, wird mit dem verfügbaren Kapital gekauft. Nach einem Kauf wird ein Verkaufsziel berechnet (`profit_target_pct`). Erreicht der Kurs dieses Ziel, wird verkauft und die Position geschlossen. Jede Berechnung wird in die Zustandsdatei geschrieben, sodass du jederzeit sehen kannst, welche Daten analysiert wurden und welche Entscheidung getroffen wurde.
+Alle `check_interval` Sekunden ruft der Bot die jüngsten Kursdaten für das gewünschte Symbol ab. Liegt der kurzfristige gleitende Durchschnitt über dem langfristigen Durchschnitt und der aktuelle Kurs nicht wesentlich darüber, empfiehlt der Bot einen Kauf. Nach einem virtuellen Kauf wird ein Verkaufsziel berechnet (`profit_target_pct`). Erreicht der Kurs dieses Ziel, wird eine Verkaufsempfehlung ausgesprochen und die Position geschlossen. Jede Berechnung wird in die Zustandsdatei geschrieben, sodass du jederzeit sehen kannst, welche Daten analysiert wurden und welche Entscheidung getroffen wurde.

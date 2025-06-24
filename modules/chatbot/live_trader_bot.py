@@ -22,12 +22,15 @@ class LiveSettings:
     profit_target_pct: float = 1.5
     check_interval: int = 30
     debug: bool = True
+    telegram_enabled: bool = False
+    telegram_settings_file: str = "config/telegram/bot_settings.json"
 
     @staticmethod
     def load(filename: str) -> "LiveSettings":
         with open(filename, "r") as fh:
             data = json.load(fh)
-        return LiveSettings(**data)
+        valid = {k: v for k, v in data.items() if k in LiveSettings.__annotations__}
+        return LiveSettings(**valid)
 
 
 class LiveTraderBot:
@@ -40,6 +43,17 @@ class LiveTraderBot:
         self.last_buy_price: float | None = None
         self.target_sell_price: float | None = None
         self.state_file = "output/live_trader_state.json"
+        self.telegram_token: str | None = None
+        self.telegram_chat_id: str | None = None
+        if self.settings.telegram_enabled:
+            try:
+                with open(self.settings.telegram_settings_file, "r") as fh:
+                    data = json.load(fh)
+                self.telegram_token = data.get("bot_token")
+                self.telegram_chat_id = data.get("chat_id")
+            except FileNotFoundError:
+                print("Telegram settings file not found")
+                self.settings.telegram_enabled = False
 
     def _fetch_data(self) -> pd.DataFrame:
         ticker = yf.Ticker(self.settings.symbol)
@@ -57,6 +71,34 @@ class LiveTraderBot:
     def _log(self, info: Dict) -> None:
         if self.settings.debug:
             print(json.dumps(info, indent=2))
+
+    def _notify(self, info: Dict) -> None:
+        if not self.settings.telegram_enabled:
+            return
+        if not (self.telegram_token and self.telegram_chat_id):
+            return
+        import requests
+
+        text_lines = [
+            f"{info.get('timestamp')}",
+            f"Action: {info.get('action') or 'HOLD'}",
+            f"Price: {info.get('price'):.2f}",
+            f"Short MA: {info.get('short_ma'):.2f}",
+            f"Long MA: {info.get('long_ma'):.2f}",
+            f"Position: {info.get('position'):.6f}",
+            f"Cash: {info.get('cash'):.2f}",
+            f"Target sell: {info.get('target_sell_price')}",
+            f"Next buy: {info.get('next_buy_price')}",
+        ]
+        text = "\n".join(text_lines)
+        try:
+            requests.post(
+                f"https://api.telegram.org/bot{self.telegram_token}/sendMessage",
+                data={"chat_id": self.telegram_chat_id, "text": text},
+                timeout=10,
+            )
+        except requests.RequestException:
+            pass
 
     def run(self) -> None:
         print(
@@ -96,6 +138,7 @@ class LiveTraderBot:
 
             self._write_state(info)
             self._log(info)
+            self._notify(info)
             time.sleep(self.settings.check_interval)
 
 

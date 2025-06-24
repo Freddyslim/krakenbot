@@ -5,5 +5,7 @@
     "trade_amount": 1000,
     "profit_target_pct": 1.5,
     "check_interval": 30,
-    "debug": true
+    "debug": true,
+    "telegram_enabled": false,
+    "telegram_settings_file": "config/telegram/bot_settings.json"
 }
