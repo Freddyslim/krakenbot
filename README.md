@@ -41,6 +41,7 @@ Copy the example files and fill in your own credentials:
 ```bash
 cp config/api/kraken_key.json.example config/api/kraken_key.json
 cp config/api/withdraw_db.json.example config/api/withdraw_db.json
+cp config/telegram/bot_settings.json.example config/telegram/bot_settings.json
 ```
 
 Edit the new `.json` files with your API keys and withdraw settings. Keep these files outside of version control.
@@ -57,6 +58,7 @@ From there you can manage API keys, withdraw addresses and perform a limited set
 
 
 For a step-by-step guide on starting and using the menu see [BOT_USAGE.md](BOT_USAGE.md).
+An overview of the project structure can be found in [docs/overview.md](docs/overview.md).
 
 ### Available Modules
 
@@ -66,6 +68,7 @@ menu interface. A few examples are:
 - **api_editor** – manage your stored API keys
 - **withdraw_adress** – edit withdraw addresses
 - **kraken_request** – make individual API requests
+- **telegram_bot** – minimal read-only Telegram bot
 - **generate-trades-history-csv** – export trade history into CSV format
 
 ### Output Folder
@@ -73,6 +76,20 @@ menu interface. A few examples are:
 Generated data such as CSV exports is stored in the `output/` directory. The
 folder only contains a `readme.md` placeholder by default and will be populated
 once modules are executed.
+
+## Telegram Bot
+
+The Telegram bot allows read-only access to your Kraken account. After
+configuring `config/telegram/bot_settings.json` with your bot token, chat ID and
+the API ID to use, you can start it from the main menu or by running
+
+```bash
+python -m modules.telegram_bot.telegram_bot
+```
+
+Available commands are `/balance` to show your account balances and `/ticker` to
+display the current price for a currency pair. More functionality can easily be
+added.
 
 ## Security Notes
 

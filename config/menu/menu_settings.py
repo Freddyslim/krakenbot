@@ -13,7 +13,7 @@ main_menu_items = {
     1: 'Bearbeiten der APIKeys',
     2: 'Bearbeiten der withdraw Adressen',
     3: 'Kraken Request',
-    # 4: 'Convert xlsx to json',
+    4: 'Telegram Bot starten',
     99: 'Zurück'
 }
 ############## kraken request menu ##############
