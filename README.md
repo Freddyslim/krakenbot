@@ -1,6 +1,6 @@
 # Kraken Tool
 
-This project is an experimental command line interface for the [Kraken](https://www.kraken.com/) cryptocurrency exchange. The code base was originally created for personal use and is not actively maintained. The repository contains various modules for interacting with the Kraken API, editing API credentials and exporting data such as trade history or ledger information.
+This project is an experimental command line interface for the [Kraken](https://www.kraken.com/) cryptocurrency exchange. The code base was originally created for personal use and is not actively maintained. The repository contains several small modules for interacting with the Kraken API, editing API credentials and exporting data such as trade history or ledger information.
 
 ## Warning
 
@@ -55,7 +55,24 @@ python main.py
 
 From there you can manage API keys, withdraw addresses and perform a limited set of Kraken requests. Many features are incomplete and should be reviewed before real trading use.
 
+
 For a step-by-step guide on starting and using the menu see [BOT_USAGE.md](BOT_USAGE.md).
+
+### Available Modules
+
+The `modules` directory contains small utilities that can be executed from the
+menu interface. A few examples are:
+
+- **api_editor** – manage your stored API keys
+- **withdraw_adress** – edit withdraw addresses
+- **kraken_request** – make individual API requests
+- **generate-trades-history-csv** – export trade history into CSV format
+
+### Output Folder
+
+Generated data such as CSV exports is stored in the `output/` directory. The
+folder only contains a `readme.md` placeholder by default and will be populated
+once modules are executed.
 
 ## Security Notes
 
