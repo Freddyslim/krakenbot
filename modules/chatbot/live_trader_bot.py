@@ -22,6 +22,7 @@ class LiveSettings:
     trade_amount: float = 1000.0
     profit_target_pct: float = 1.5
     check_interval: int = 30
+    slope_window_minutes: int = 10
     debug: bool = True
     telegram_enabled: bool = False
     telegram_settings_file: str = "config/telegram/bot_settings.json"
@@ -162,22 +163,27 @@ class LiveTraderBot:
         except ValueError:
             return 0
 
-    def _estimate_time_to_target(
-        self, price: float, prev_price: float, target: Optional[float]
+    def _compute_price_slope(self, prices: pd.Series) -> float:
+        """Return price change per second over the configured slope window."""
+        if len(prices) < 2:
+            return 0.0
+        delta_price = prices.iloc[-1] - prices.iloc[0]
+        delta_time = (prices.index[-1] - prices.index[0]).total_seconds()
+        if delta_time == 0:
+            return 0.0
+        return float(delta_price) / delta_time
+
+    def _estimate_time_to_target_from_slope(
+        self, price: float, slope: float, target: Optional[float]
     ) -> Optional[pd.Timestamp]:
-        if target is None:
+        if target is None or slope == 0:
             return None
-        delta = price - prev_price
-        if delta == 0:
-            return None
-        if (delta > 0 and target <= price) or (delta < 0 and target >= price):
+        if (slope > 0 and target <= price) or (slope < 0 and target >= price):
             return pd.Timestamp.utcnow()
-        if (delta > 0 and target > price) or (delta < 0 and target < price):
-            intervals = (target - price) / delta
-            if intervals > 0:
-                seconds = intervals * self._interval_seconds()
-                return pd.Timestamp.utcnow() + pd.Timedelta(seconds=seconds)
-        return None
+        seconds_needed = (target - price) / slope
+        if seconds_needed <= 0:
+            return None
+        return pd.Timestamp.utcnow() + pd.Timedelta(seconds=seconds_needed)
 
     def run(self) -> None:
         print(
@@ -189,6 +195,16 @@ class LiveTraderBot:
             prev_price = float(df["Close"].iloc[-2]) if len(df) > 1 else price
             short_ma = float(df["Close"].rolling(window=7).mean().iloc[-1])
             long_ma = float(df["Close"].rolling(window=25).mean().iloc[-1])
+
+            window_points = max(
+                2,
+                int(
+                    self.settings.slope_window_minutes * 60 / self._interval_seconds()
+                )
+                + 1,
+            )
+            recent_prices = df["Close"].tail(window_points)
+            price_slope = self._compute_price_slope(recent_prices)
 
             action = None
             timestamp = pd.Timestamp.utcnow().isoformat()
@@ -216,7 +232,9 @@ class LiveTraderBot:
             next_target = (
                 short_ma if self.position == 0 else self.target_sell_price
             )
-            eta_ts = self._estimate_time_to_target(price, prev_price, next_target)
+            eta_ts = self._estimate_time_to_target_from_slope(
+                price, price_slope, next_target
+            )
             current_value = self.cash + self.position * price
             profit = current_value - self.initial_balance
             info = {
@@ -231,6 +249,7 @@ class LiveTraderBot:
                 "next_buy_price": short_ma if self.position == 0 else None,
                 "expected_next_order_time": eta_ts.isoformat() if eta_ts else None,
                 "expected_action": "BUY" if self.position == 0 else "SELL",
+                "price_slope": price_slope,
                 "action": action,
                 "profit": profit,
             }

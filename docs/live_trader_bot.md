@@ -14,6 +14,7 @@ Kopiere `config/chatbot/live_trader_settings.json.example` nach `config/chatbot/
     "trade_amount": 1000,
     "profit_target_pct": 1.5,
     "check_interval": 30,
+    "slope_window_minutes": 10,
     "debug": true,
     "telegram_enabled": false,
     "telegram_settings_file": "config/telegram/bot_settings.json"
@@ -28,6 +29,7 @@ Kopiere `config/chatbot/live_trader_settings.json.example` nach `config/chatbot/
 - **trade_amount** – Virtuelles Startkapital, das beim ersten Kaufsignal eingesetzt wird.
 - **profit_target_pct** – Prozentualer Aufschlag auf den Kaufkurs, bei dem ein Verkauf erfolgen soll.
 - **check_interval** – Wie viele Sekunden zwischen zwei Aktualisierungen liegen.
+- **slope_window_minutes** – Zeitraum in Minuten, aus dem die Preissteigerung zur Vorhersage berechnet wird.
 - **debug** – Wenn `true`, werden die berechneten Werte jedes Mal auf der Konsole ausgegeben.
 - **telegram_enabled** – Wenn `true`, werden Empfehlungen per Telegram verschickt.
 - **telegram_settings_file** – Pfad zur Datei mit Bot-Token und Chat-ID.
@@ -47,6 +49,10 @@ Standardperioden von Yahoo Finance möglich:
 
 Bei Intervallen unterhalb von `1d` liefert Yahoo Finance lediglich Daten
 der letzten ca. 60 Tage.
+
+Der Parameter `slope_window_minutes` wertet nur Kursdaten in diesem Zeitfenster aus.
+Für aussagekräftige Prognosen sollte `interval` deutlich kleiner als dieser
+Wert sein (z. B. `1m`).
 
 Während der Laufzeit speichert der Bot seinen Zustand in `output/live_trader_state.json`. Dort findest du den aktuellen Kurs, gleitende Durchschnitte, offene Positionen und die letzte Aktion.
 
