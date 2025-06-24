@@ -47,3 +47,7 @@ Option **3** wählt den LiveTraderBot. Anschließend kann ein abweichender Pfad 
 ## Funktionsweise
 
 Alle `check_interval` Sekunden ruft der Bot die jüngsten Kursdaten für das gewünschte Symbol ab. Liegt der kurzfristige gleitende Durchschnitt über dem langfristigen Durchschnitt und der aktuelle Kurs nicht wesentlich darüber, empfiehlt der Bot einen Kauf. Nach einem virtuellen Kauf wird ein Verkaufsziel berechnet (`profit_target_pct`). Erreicht der Kurs dieses Ziel, wird eine Verkaufsempfehlung ausgesprochen und die Position geschlossen. Jede Berechnung wird in die Zustandsdatei geschrieben, sodass du jederzeit sehen kannst, welche Daten analysiert wurden und welche Entscheidung getroffen wurde.
+
+## Logging
+
+Bei jedem Start legt der Bot eine Logdatei im Ordner `log/` an. Darin werden die verwendeten Einstellungen sowie alle versendeten Telegram-Nachrichten festgehalten. Der Ordner steht in der `.gitignore`, damit keine sensiblen Informationen versioniert werden.
