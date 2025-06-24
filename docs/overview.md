@@ -12,6 +12,7 @@ flowchart TD
     E --> H[config/telegram/bot_settings.json]
     D --> I[lib/kraken_api.py]
     J --> K[modules/chatbot]
+    K --> L[config/chatbot/elliott_wave_settings.json]
 ```
 
 This diagram shows the high level components of the project and how they relate
