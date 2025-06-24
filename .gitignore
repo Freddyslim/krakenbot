@@ -6,5 +6,7 @@ __pycache__/
 config/api/kraken_key.json
 config/api/withdraw_db.json
 
+config/chatbot/elliott_wave_settings.json
+
 # Misc
 *.log
