@@ -38,6 +38,19 @@ Copy `config/chatbot/elliott_wave_settings.json.example` to
   the simplified wave detection. Lower values create more waves and therefore
   more trades.
 
+### Valid periods and intervals
+
+Historical data is requested via Yahoo Finance, which accepts specific strings
+for time ranges and resolutions:
+
+- **Periods**: `1d`, `5d`, `1mo`, `3mo`, `6mo`, `1y`, `2y`, `5y`, `10y`, `ytd`,
+  `max`
+- **Intervals**: `1m`, `2m`, `5m`, `15m`, `30m`, `60m`, `90m`, `1h`, `1d`, `5d`,
+  `1wk`, `1mo`, `3mo`
+
+Intraday intervals (`1m`–`1h`) are limited to roughly the last 60 days of
+history.
+
 Changing these values influences how many signals the bot will generate. For
 example, reducing `wave_threshold_pct` and `interval` leads to frequent trades
 on small moves while increasing them will result in fewer but potentially larger

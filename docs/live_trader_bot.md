@@ -32,6 +32,22 @@ Kopiere `config/chatbot/live_trader_settings.json.example` nach `config/chatbot/
 - **telegram_enabled** – Wenn `true`, werden Empfehlungen per Telegram verschickt.
 - **telegram_settings_file** – Pfad zur Datei mit Bot-Token und Chat-ID.
 
+### Gültige Zeitangaben
+
+Die Daten stammen von Yahoo Finance. Für `interval` kannst du eine der
+folgenden Auflösungen angeben:
+
+- `1m`, `2m`, `5m`, `15m`, `30m`, `60m`, `90m`, `1h`, `1d`, `5d`, `1wk`,
+  `1mo`, `3mo`
+
+`lookback_days` wird intern zu einem `period`-String im Format `Nd`
+umgewandelt. Anstelle einer Tageszahl wären auch die
+Standardperioden von Yahoo Finance möglich:
+`1d`, `5d`, `1mo`, `3mo`, `6mo`, `1y`, `2y`, `5y`, `10y`, `ytd`, `max`.
+
+Bei Intervallen unterhalb von `1d` liefert Yahoo Finance lediglich Daten
+der letzten ca. 60 Tage.
+
 Während der Laufzeit speichert der Bot seinen Zustand in `output/live_trader_state.json`. Dort findest du den aktuellen Kurs, gleitende Durchschnitte, offene Positionen und die letzte Aktion.
 
 ## Starten des Bots
