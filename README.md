@@ -1,124 +1,50 @@
 # Kraken Tool
 
+This project is an experimental command line interface for the [Kraken](https://www.kraken.com/) cryptocurrency exchange. The code base was originally created for personal use and is not actively maintained. The repository contains various modules for interacting with the Kraken API, editing API credentials and exporting data such as trade history or ledger information.
 
-## Getting started
-CLI Tool  
-Kraken API documentation
+## Warning
 
+The original repository stored real API credentials in `config/api/kraken_key.json`. These files have been removed from version control. **Never store API keys directly in the repository**. Always use environment variables or configuration files that are ignored by Git.
 
-Dieses Tool soll die Möglichkeit bieten Funktionen der Kraken API zu nutzen.
+## Requirements
 
+- Python 3.10+
+- The packages listed in `requirements.txt` (generate it from your environment or adjust as needed)
 
-### Struktur
+Install dependencies with:
 
-kraken_remote/
-<details open>
-  <summary>config/</summary>
-  
-  - some configuration files (.gitignore)
-</details>
+```bash
+pip install -r requirements.txt
+```
 
-<details open>
-  <summary>lib/</summary>
+## Configuration
 
-  - [ ] kranken_api.py (all available kraken_api functions from https://docs.kraken.com/rest/)
-  - [ ] lib.py (all self-created functions)
-</details>
-  
-<details open>
-  <summary>modules/</summary>
+Copy the example files and fill in your own credentials:
 
-  - [ ] api_list.py (module to edit User APIs)
-  - [ ] download_ledger_history.py (module to download ledger history)
-  - [ ] kraken_request.py (module to easy use all available kraken_api functions from https://docs.kraken.com/rest/)
-  - [ ] withdraw_adresses.py (module to use withdraw addresses from kraken account)
-</details>
+```bash
+cp config/api/kraken_key.json.example config/api/kraken_key.json
+cp config/api/withdraw_db.json.example config/api/withdraw_db.json
+```
 
-<details open>
-  <summary>output/</summary>
+Edit the new `.json` files with your API keys and withdraw settings. Keep these files outside of version control.
 
-  - some output files, that are generated from request (.gitignore)
-</details>
+## Usage
 
-<details open>
-  <summary>main.py (Program)</summary>
+The entry point is `main.py`. Running it will display a simple menu interface:
 
-  - [ ] api_list.py
-  - [ ] withdraw_adresses.py
-  - [ ] kraken_request.py
-</details>
+```bash
+python main.py
+```
 
-  
-.gitignore  
-README.md
+From there you can manage API keys, withdraw addresses and perform a limited set of Kraken requests. Many features are incomplete and should be reviewed before real trading use.
 
+## Security Notes
 
-<br>
+- Use API keys with the minimal set of permissions required for your tasks.
+- Keep key files secure and never commit them to Git.
+- This code executes modules using `exec`, which can be unsafe. Review modules before running.
+- Consider using virtual environments and restricting network access when testing.
 
-* * *
-<br>
+## Project Status
 
-# To Dos
-
-## Bots
-
-- [ ] Auto buy and withdraw 
-- [ ] download ledger history and make backup
-- [ ] download history data for asset (1m, 15m, ...)
-
-## Funktionen
-
-- [ ] Funktionen so umschreiben, dass Eingangsvariablen definiert sind
-- [ ] Kommentare hinzufügen oder überarbeiten
-- [ ] download history ledger implementieren
-- [ ] api_list ändern nicht fertig
-- [ ] löschen bestätigen hinzufügen
-- [ ] 
-
-  
-
-<details open>
-  <summary>Kraken Requests</summary>
-
-  * - [ ] Kraken Requests
-  *   - [ ] Market Data
-  *   - [ ] User Data
-      *   - [x] Get Account Balance
-      *   - [ ] Get Trade Balance
-      *   - [ ] Get Open Orders
-      *   - [ ] Get open Orders
-      *   - [ ] Query Orders Info
-      *   - [ ] Get Trades History
-      *   - [ ] Query Trades Infos
-      *   - [ ] Get Open Positions
-      *   - [ ] Get Ledgers Info
-      *   - [ ] Query Ledgers
-      *   - [ ] Get Trade Volume
-      *   - [ ] Request Export Report
-  *   - [ ] Trading
-  *   - [ ] Funding
-  *   - [ ] Subaccount
-  *   - [ ] Staking
-  *   - [ ] Websocket
-  *   - [ ] Ticker
-
-</details>
-
-
-<details open>
-  <summary>Datenmanagement</summary> 
-  
-  *  - [ ] withdraw adresses
-     * - [x] add withdraw address 
-     * - [x] edit withdraw adress 
-     * - [x] delete withdraw address
-     * - [ ] show currencies table
-     * - [ ] add column apiURL?
-  *  - [ ] api management
-     * - [x] add api pair 
-     * - [x] edit api pair
-     * - [x] delete api pair
-     * - [ ] Selection of api keys?? # perhaps better with binding to requets itself? 
-
-</details>
-
+This project is provided as-is for reference. It has not been updated to modern best practices and is not recommended for production trading without significant auditing and refactoring.

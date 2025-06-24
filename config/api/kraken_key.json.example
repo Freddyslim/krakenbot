@@ -1,0 +1,10 @@
+{
+    "1": {
+        "id": "1",
+        "name": "Example",
+        "api_key": "YOUR_API_KEY_HERE",
+        "api_sec": "YOUR_API_SECRET_HERE",
+        "api_url": "https://api.kraken.com",
+        "in_use": "false"
+    }
+}
