@@ -225,10 +225,15 @@ class LimitCycleBot(BaseChatBot):
             )
 
     def _update_sell_order(self, price: float) -> None:
-        if not self.open_sell:
+        if self.last_buy_price is None or self.asset_balance <= 0:
             return
+
         if self.high_since_buy is None or price > self.high_since_buy:
             self.high_since_buy = price
+
+        target_price = self.last_buy_price * (1 + self.settings.take_profit_percent / 100)
+
+        if self.open_sell:
             new_price = self.high_since_buy * (1 - self.settings.safety_offset / 100)
             if new_price > self.open_sell.price:
                 if self.settings.debug:
@@ -236,8 +241,16 @@ class LimitCycleBot(BaseChatBot):
                         f"Adjusting sell order from {self.open_sell.price:.4f} to {new_price:.4f} €"
                     )
                 self.open_sell.price = new_price
-        if price >= self.open_sell.price:
-            self._execute_sell(self.open_sell.price, self.open_sell.amount)
+            if price >= self.open_sell.price:
+                self._execute_sell(self.open_sell.price, self.open_sell.amount)
+        else:
+            if self.high_since_buy >= target_price:
+                sell_price = self.high_since_buy * (1 - self.settings.safety_offset / 100)
+                self.open_sell = LimitOrder("sell", sell_price, self.asset_balance)
+                if self.settings.debug:
+                    lib.highlight_message(
+                        f"Sell order placed at {sell_price:.4f} € for target profit"
+                    )
 
     def _check_stop_loss(self, price: float) -> None:
         if not (self.settings.enable_stop_loss and self.open_stop_loss):
@@ -264,22 +277,16 @@ class LimitCycleBot(BaseChatBot):
             self.eur_balance -= cost
             self.asset_balance += amount
             self.last_buy_price = buy_price
+            self.high_since_buy = buy_price
             if self.settings.debug:
                 lib.highlight_message(
                     f"BUY executed at {buy_price:.4f} € for {cost:.2f} €"
                 )
             self.open_buy_low = None
             self.open_buy_high = None
-            target_price = buy_price * (1 + self.settings.take_profit_percent / 100)
-            sell_price = target_price * (1 - self.settings.safety_offset / 100)
-            self.open_sell = LimitOrder("sell", sell_price, amount)
             if self.settings.enable_stop_loss:
                 stop_price = buy_price * (1 - self.settings.stop_loss_percent / 100)
                 self.open_stop_loss = LimitOrder("sell", stop_price, amount)
-            if self.settings.debug:
-                lib.highlight_message(
-                    f"Sell order placed at {sell_price:.4f} € for target profit"
-                )
         elif self.open_buy_high:
             if price < self.open_buy_high.price:
                 new_price = price * (1 + self.settings.safety_offset / 100)
@@ -296,22 +303,16 @@ class LimitCycleBot(BaseChatBot):
                 self.eur_balance -= cost
                 self.asset_balance += amount
                 self.last_buy_price = buy_price
+                self.high_since_buy = buy_price
                 if self.settings.debug:
                     lib.highlight_message(
                         f"BUY executed at {buy_price:.4f} € for {cost:.2f} €"
                     )
                 self.open_buy_low = None
                 self.open_buy_high = None
-                target_price = buy_price * (1 + self.settings.take_profit_percent / 100)
-                sell_price = target_price * (1 - self.settings.safety_offset / 100)
-                self.open_sell = LimitOrder("sell", sell_price, amount)
                 if self.settings.enable_stop_loss:
                     stop_price = buy_price * (1 - self.settings.stop_loss_percent / 100)
                     self.open_stop_loss = LimitOrder("sell", stop_price, amount)
-                if self.settings.debug:
-                    lib.highlight_message(
-                        f"Sell order placed at {sell_price:.4f} € for target profit"
-                    )
 
     # --- Main loop -------------------------------------------------------
     def run(self) -> None:
