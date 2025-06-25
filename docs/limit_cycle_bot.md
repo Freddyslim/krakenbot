@@ -20,7 +20,8 @@ Copy `config/chatbot/limit_cycle_settings.json.example` to `config/chatbot/limit
     "stop_loss_percent": 2.0,
     "debug": true,
     "log_interval_terminal": 1,
-    "log_interval_file": 1
+    "log_interval_file": 1,
+    "auto_log": true
 }
 ```
 
@@ -39,6 +40,7 @@ Copy `config/chatbot/limit_cycle_settings.json.example` to `config/chatbot/limit
 - **debug** – If `true`, the bot prints all status information to the console.
 - **log_interval_terminal** – Number of refresh cycles between terminal log outputs.
 - **log_interval_file** – Number of refresh cycles between file log entries.
+- **auto_log** – If `true`, log output appears only when portfolio values change; when `false`, logs are printed on every interval.
 
 ## Running the bot
 

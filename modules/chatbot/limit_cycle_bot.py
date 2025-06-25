@@ -28,6 +28,7 @@ class CycleSettings:
     debug: bool = True  # print debug information
     log_interval_terminal: int = 1  # number of refresh cycles between terminal log output
     log_interval_file: int = 1  # number of refresh cycles between file log output
+    auto_log: bool = True  # only output logs when values change
 
     @staticmethod
     def load(filename: str) -> "CycleSettings":
@@ -69,8 +70,23 @@ class LimitCycleBot(BaseChatBot):
         self.start_time = time.time()
         self.log_counter = 0
         self.log_file_path = ""
+        self._last_snapshot_terminal: Optional[dict] = None
+        self._last_snapshot_file: Optional[dict] = None
 
     # --- Helpers ---------------------------------------------------------
+    def _create_snapshot(self, price: float) -> dict:
+        """Return the current state values for change detection."""
+        return {
+            "price": round(price, 4),
+            "eur_balance": round(self.eur_balance, 2),
+            "asset_balance": round(self.asset_balance, 8),
+            "current_buy_amount": round(self.current_buy_amount, 2),
+            "last_buy_price": round(self.last_buy_price, 4) if self.last_buy_price else None,
+            "open_buy_low": round(self.open_buy_low.price, 4) if self.open_buy_low else None,
+            "open_buy_high": round(self.open_buy_high.price, 4) if self.open_buy_high else None,
+            "open_sell": round(self.open_sell.price, 4) if self.open_sell else None,
+            "open_stop_loss": round(self.open_stop_loss.price, 4) if self.open_stop_loss else None,
+        }
     def _waiting_for(self) -> str:
         if self.open_stop_loss:
             return f"stop loss <= {self.open_stop_loss.price:.4f} €"
@@ -87,7 +103,22 @@ class LimitCycleBot(BaseChatBot):
         return "new cycle"
 
     def _log(self, price: float, *, to_terminal: bool = True, to_file: bool = False) -> None:
-        """Output portfolio status to terminal and/or file."""
+        """Output portfolio status to terminal and/or file.
+
+        When ``settings.auto_log`` is True, logs are printed only when any
+        tracked numeric value changed since the last output for the respective
+        destination.
+        """
+        snapshot = self._create_snapshot(price)
+        if to_terminal:
+            if self.settings.auto_log and snapshot == self._last_snapshot_terminal:
+                return
+            self._last_snapshot_terminal = snapshot.copy()
+        if to_file:
+            if self.settings.auto_log and snapshot == self._last_snapshot_file:
+                return
+            self._last_snapshot_file = snapshot.copy()
+
         current_value = self.eur_balance + self.asset_balance * price
         elapsed = int(time.time() - self.start_time)
         lines = [
@@ -133,12 +164,14 @@ class LimitCycleBot(BaseChatBot):
             print("\n".join(lines))
             if profit_lines:
                 print("\n".join(profit_lines))
+            print()
 
         if to_file:
             with open(self.log_file_path, "a") as fh:
                 fh.write("\n".join(lines) + "\n")
                 if profit_lines:
                     fh.write("\n".join(profit_lines) + "\n")
+                fh.write("\n")
 
     def _execute_sell(self, sell_price: float, amount: float, stop_loss: bool = False) -> None:
         eur_received = amount * sell_price
