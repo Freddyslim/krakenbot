@@ -101,6 +101,8 @@ fetches price data from both Kraken and Yahoo Finance and prints the values.
 Another demo called `ElliottWaveBot` performs a very rough Elliott wave
 analysis on historical prices and simulates trades based on configurable
 criteria.
+`LimitCycleBot` demonstrates repeated limit orders with a small portfolio and
+reports the last realised profit after each trade cycle.
 Start it from the main menu or directly via:
 
 ```bash
@@ -111,7 +113,9 @@ You can customise the trading pair and symbol before the bot runs. When
 starting the Elliott wave bot you may pass a settings file path to tweak
 parameters such as analysis period, price interval and profit margin.
 See [docs/elliott_wave_bot.md](docs/elliott_wave_bot.md) for a detailed
-description of the available options.
+description of the available options. Details about the limit order cycle
+strategy can be found in
+[docs/limit_cycle_bot.md](docs/limit_cycle_bot.md).
 
 ## Security Notes
 
