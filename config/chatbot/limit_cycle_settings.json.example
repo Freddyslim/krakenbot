@@ -7,6 +7,8 @@
     "take_profit_percent": 0.8,
     "buyback_percent": 0.5,
     "safety_offset": 0.15,
+    "enable_stop_loss": false,
+    "stop_loss_percent": 2.0,
     "debug": true,
     "log_interval": 1
 }
