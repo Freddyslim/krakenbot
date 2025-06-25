@@ -10,6 +10,12 @@ from PyQt5.QtWidgets import QApplication, QFileDialog
 lib_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, lib_path)
 
+
+def highlight_message(message: str) -> None:
+    """Print a highlighted message for better visibility."""
+    line = "=" * len(message)
+    print(f"\n{line}\n{message}\n{line}\n")
+
 #######################################################################
 ############################ functions ################################
 #######################################################################
