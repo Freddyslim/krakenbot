@@ -29,9 +29,7 @@ Copy `config/chatbot/limit_cycle_settings.json.example` to `config/chatbot/limit
 
 -### Fields
 
-- **symbol** – Ticker symbol used for price retrieval via Yahoo Finance.
 - **pair** – Kraken trading pair used when fetching prices from the API.
-- **use_kraken_price** – If `true`, the bot retrieves the latest price from Kraken.
 - **refresh_rate** – Seconds between price checks.
 - **startbuy_threshold** – Percentage above the current price for the initial buy order.
 - **initial_portfolio_eur** – Euro amount used for the very first trade.

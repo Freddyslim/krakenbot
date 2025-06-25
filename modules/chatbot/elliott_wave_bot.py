@@ -9,7 +9,7 @@ import json
 import os
 
 import pandas as pd
-import yfinance as yf
+from lib import kraken_api
 
 
 @dataclass
@@ -21,9 +21,9 @@ class Trade:
 
 @dataclass
 class Settings:
-    symbol: str = "BTC-EUR"  # Yahoo symbol
-    period: str = "1y"  # historical data period
-    interval: str = "1d"  # data interval
+    pair: str = "XBTEUR"  # Kraken trading pair
+    lookback_days: int = 365  # days of historical data
+    interval: int = 1440  # minutes between data points
     profit_pct: float = 2.0  # profit target per trade
     start_balance: float = 1000.0  # initial capital for simulation
     wave_threshold_pct: float = 2.5  # % move defining a wave
@@ -50,9 +50,15 @@ class ElliottWaveBot:
         self.trades: List[Trade] = []
 
     def fetch_data(self) -> pd.DataFrame:
-        ticker = yf.Ticker(self.settings.symbol)
-        df = ticker.history(period=self.settings.period, interval=self.settings.interval)
-        df = df.dropna()
+        since = int((pd.Timestamp.utcnow() - pd.Timedelta(days=self.settings.lookback_days)).timestamp())
+        resp = kraken_api.ohlc(self.settings.pair, interval=self.settings.interval, since=since)
+        data = resp.get("result", {}).get(self.settings.pair)
+        if not data:
+            self.data = pd.DataFrame()
+            return self.data
+        df = pd.DataFrame(data, columns=["time", "open", "high", "low", "close", "vwap", "volume", "count"])
+        df["time"] = pd.to_datetime(df["time"], unit="s")
+        df = df.set_index("time")
         self.data = df
         return df
 

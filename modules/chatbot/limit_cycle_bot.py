@@ -15,9 +15,7 @@ import lib.lib as lib
 
 @dataclass
 class CycleSettings:
-    symbol: str = "BTC-EUR"  # Yahoo Finance symbol
     pair: str = "XBTEUR"  # Kraken trading pair
-    use_kraken_price: bool = False  # fetch price from Kraken instead of Yahoo
     refresh_rate: int = 2  # seconds between price checks
     startbuy_threshold: float = 0.4  # % difference between initial buy orders
     initial_portfolio_eur: float = 1000.0  # starting capital
@@ -81,17 +79,15 @@ class LimitCycleBot(BaseChatBot):
     # --- Helpers ---------------------------------------------------------
     def _get_price(self) -> float | None:
         """Return the latest price from the configured source."""
-        if self.settings.use_kraken_price:
-            data = self.fetch_kraken_ticker(self.settings.pair)
-            if not data or data.get("error"):
-                return None
-            result = data.get("result")
-            if not result:
-                return None
-            info = next(iter(result.values()))
-            last = info.get("c", [None])[0]
-            return float(last) if last is not None else None
-        return self.fetch_yahoo_price(self.settings.symbol)
+        data = self.fetch_kraken_ticker(self.settings.pair)
+        if not data or data.get("error"):
+            return None
+        result = data.get("result")
+        if not result:
+            return None
+        info = next(iter(result.values()))
+        last = info.get("c", [None])[0]
+        return float(last) if last is not None else None
 
     def _create_snapshot(self, price: float) -> dict:
         """Return the current state values for change detection."""
@@ -150,11 +146,7 @@ class LimitCycleBot(BaseChatBot):
 
         current_value = self.eur_balance + self.asset_balance * price
         elapsed = int(time.time() - self.start_time)
-        asset_label = (
-            self.settings.pair
-            if self.settings.use_kraken_price
-            else self.settings.symbol
-        )
+        asset_label = self.settings.pair
         lines = [
             f"[LOG {elapsed}s] Portfolio Status:",
             f"Asset:               {asset_label}",
@@ -165,9 +157,7 @@ class LimitCycleBot(BaseChatBot):
             f"Freies Kapital:      {self.eur_balance:.2f} €",
         ]
         if self.asset_balance > 0:
-            asset = self.settings.symbol.split("-")[0]
-            if self.settings.use_kraken_price:
-                asset = self.settings.pair[:3]
+            asset = self.settings.pair[:3]
             lines.append(f"Bestand:            {self.asset_balance:.8f} {asset}")
         if self.last_buy_price:
             lines.append(f"Letzter Kaufkurs:    {self.last_buy_price:.4f} €")

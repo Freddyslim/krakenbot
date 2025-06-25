@@ -72,7 +72,7 @@ menu interface. A few examples are:
 - **kraken_request** – make individual API requests
 - **telegram_bot** – minimal read-only Telegram bot
 - **generate-trades-history-csv** – export trade history into CSV format
-- **chatbot** – run small strategy bots fetching data from Kraken and Yahoo Finance
+- **chatbot** – run small strategy bots fetching data from Kraken
 
 ### Output Folder
 
@@ -97,7 +97,7 @@ added.
 ## Chatbots
 
 The `chatbot` module contains small strategy bots. An example `TickerBot`
-fetches price data from both Kraken and Yahoo Finance and prints the values.
+fetches price data from Kraken and prints the values.
 Another demo called `ElliottWaveBot` performs a very rough Elliott wave
 analysis on historical prices and simulates trades based on configurable
 criteria.

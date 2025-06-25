@@ -4,4 +4,3 @@ prettytable
 PyQt5
 python-telegram-bot==20.7
 urllib3
-yfinance
