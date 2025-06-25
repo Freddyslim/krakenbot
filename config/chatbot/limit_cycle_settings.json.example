@@ -1,0 +1,11 @@
+{
+    "symbol": "BTC-USD",
+    "refresh_rate": 2,
+    "startbuy_threshold": 0.4,
+    "initial_portfolio_eur": 1000,
+    "reinvestment_percent": 15,
+    "take_profit_percent": 0.8,
+    "buyback_percent": 0.5,
+    "safety_offset": 0.15,
+    "debug": true
+}
