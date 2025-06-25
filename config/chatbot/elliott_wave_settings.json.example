@@ -1,8 +1,8 @@
 {
-    "symbol": "BTC-USD",          // Yahoo Finance symbol
-    "period": "1y",                // amount of historical data
-    "interval": "1d",               // data resolution
-    "profit_pct": 2.0,              // profit goal per trade in percent
-    "start_balance": 1000,          // initial balance for simulation
-    "wave_threshold_pct": 2.5       // % move considered a wave
+    "symbol": "BTC-USD",
+    "period": "1y",
+    "interval": "1d",
+    "profit_pct": 2.0,
+    "start_balance": 1000,
+    "wave_threshold_pct": 2.5
 }
