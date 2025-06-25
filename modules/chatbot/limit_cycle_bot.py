@@ -15,7 +15,7 @@ import lib.lib as lib
 
 @dataclass
 class CycleSettings:
-    symbol: str = "BTC-USD"  # Yahoo Finance symbol
+    symbol: str = "BTC-EUR"  # Yahoo Finance symbol
     pair: str = "XBTEUR"  # Kraken trading pair
     use_kraken_price: bool = False  # fetch price from Kraken instead of Yahoo
     refresh_rate: int = 2  # seconds between price checks
@@ -343,8 +343,8 @@ class LimitCycleBot(BaseChatBot):
                     self.open_stop_loss = LimitOrder("sell", stop_price, amount)
 
     # --- Main loop -------------------------------------------------------
-    def run(self) -> None:
-        """Run the trading loop until interrupted."""
+    def run(self, max_iterations: int | None = None) -> None:
+        """Run the trading loop until interrupted or ``max_iterations`` reached."""
         os.makedirs("log", exist_ok=True)
         self.log_file_path = os.path.join(
             "log", f"limit_cycle_{int(self.start_time)}.log"
@@ -355,6 +355,7 @@ class LimitCycleBot(BaseChatBot):
             fh.write("\n\n")
 
         reason = "completed"
+        iterations = 0
         try:
             price = self._get_price()
             if price is None:
@@ -376,6 +377,10 @@ class LimitCycleBot(BaseChatBot):
                 if self.log_counter % self.settings.log_interval_file == 0:
                     self._log(price, to_terminal=False, to_file=True)
                 time.sleep(self.settings.refresh_rate)
+                iterations += 1
+                if max_iterations is not None and iterations >= max_iterations:
+                    reason = "max iterations reached"
+                    break
         except KeyboardInterrupt:
             reason = "aborted by user"
         except Exception as exc:

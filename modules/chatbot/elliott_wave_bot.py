@@ -21,7 +21,7 @@ class Trade:
 
 @dataclass
 class Settings:
-    symbol: str = "BTC-USD"  # Yahoo symbol
+    symbol: str = "BTC-EUR"  # Yahoo symbol
     period: str = "1y"  # historical data period
     interval: str = "1d"  # data interval
     profit_pct: float = 2.0  # profit target per trade

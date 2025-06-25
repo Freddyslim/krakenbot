@@ -13,6 +13,8 @@ def run() -> None:
     print("2. Run Elliott wave bot")
     print("3. Run live trader bot")
     print("4. Run limit cycle bot")
+    print("5. Run cycle bot tests")
+    print("6. Evaluate cycle bot logs")
     print("99. Back")
     choice = input("Option: ") or "99"
     if choice == "1":
@@ -50,5 +52,14 @@ def run() -> None:
         settings = CycleSettings.load(filename)
         bot = LimitCycleBot(settings)
         bot.run()
+    elif choice == "5":
+        from .test_runner import run_cycle_tests
+
+        run_cycle_tests()
+    elif choice == "6":
+        from .evaluate_cycle_logs import find_best
+
+        num = input("Number of results (default 5): ") or "5"
+        find_best(int(num))
 
 

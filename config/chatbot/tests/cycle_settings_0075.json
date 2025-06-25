@@ -1,0 +1,18 @@
+{
+  "symbol": "ETH-EUR",
+  "pair": "ETHEUR",
+  "use_kraken_price": false,
+  "refresh_rate": 3,
+  "startbuy_threshold": 0.72,
+  "initial_portfolio_eur": 2000,
+  "reinvestment_percent": 26,
+  "take_profit_percent": 1.15,
+  "buyback_percent": 0.35,
+  "safety_offset": 0.13,
+  "enable_stop_loss": false,
+  "stop_loss_percent": 2.65,
+  "debug": false,
+  "log_interval_terminal": 1,
+  "log_interval_file": 1,
+  "auto_log": false
+}

@@ -8,7 +8,7 @@ Copy `config/chatbot/limit_cycle_settings.json.example` to `config/chatbot/limit
 
 ```json
 {
-    "symbol": "BTC-USD",
+    "symbol": "BTC-EUR",
     "pair": "XBTEUR",
     "use_kraken_price": false,
     "refresh_rate": 2,

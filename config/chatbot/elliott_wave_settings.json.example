@@ -1,5 +1,5 @@
 {
-    "symbol": "BTC-USD",
+    "symbol": "BTC-EUR",
     "period": "1y",
     "interval": "1d",
     "profit_pct": 2.0,

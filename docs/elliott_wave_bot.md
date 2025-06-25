@@ -13,7 +13,7 @@ Copy `config/chatbot/elliott_wave_settings.json.example` to
 
 ```json
 {
-    "symbol": "BTC-USD",
+    "symbol": "BTC-EUR",
     "period": "1y",
     "interval": "1d",
     "profit_pct": 2.0,
