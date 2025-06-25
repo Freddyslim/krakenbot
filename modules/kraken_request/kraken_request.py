@@ -30,6 +30,7 @@ def run(api_name: str) -> None:
             _run_user_data(api_key, api_sec)
         elif option == 7:
             pair = input("Ticker pair (default: XBTUSD): ") or "XBTUSD"
+            lib.highlight_message(f"Requesting ticker for {pair}")
             data = kraken_api.ticker(pair)
             lib.display_data(data)
         elif option == 99:
@@ -48,6 +49,8 @@ def _run_user_data(api_key: str, api_sec: str) -> None:
             print("Ungültige Eingabe")
             continue
         try:
+            action_name = menu_settings.user_data_menu_items.get(option, "Request")
+            lib.highlight_message(f"Executing {action_name}")
             data = func(api_key, api_sec)
             # pick display function depending on result shape
             result = data.get("result") if isinstance(data, dict) else None

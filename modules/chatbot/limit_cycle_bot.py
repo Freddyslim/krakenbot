@@ -9,6 +9,7 @@ from typing import Optional
 import re
 
 from .base import BaseChatBot
+import lib.lib as lib
 
 
 @dataclass
@@ -125,7 +126,7 @@ class LimitCycleBot(BaseChatBot):
         self.high_since_buy = None
         self.low_since_sell = None
         if self.settings.debug:
-            print(
+            lib.highlight_message(
                 f"Initial buy orders placed at {low_price:.4f} and {high_price:.4f} €"
             )
 
@@ -160,7 +161,7 @@ class LimitCycleBot(BaseChatBot):
                 "profit_pct": profit_pct,
             }
             if self.settings.debug:
-                print(
+                lib.highlight_message(
                     f"SELL executed at {sell_price:.4f} € for {eur_received:.2f} €"
                 )
             self.open_sell = None
@@ -174,7 +175,7 @@ class LimitCycleBot(BaseChatBot):
             amount = self.current_buy_amount / buy_price
             self.open_buy_low = LimitOrder("buy", buy_price, amount)
             if self.settings.debug:
-                print(
+                lib.highlight_message(
                     f"Next buy order placed at {buy_price:.4f} € for {self.current_buy_amount:.2f} €"
                 )
 
@@ -196,7 +197,7 @@ class LimitCycleBot(BaseChatBot):
             self.asset_balance += amount
             self.last_buy_price = buy_price
             if self.settings.debug:
-                print(
+                lib.highlight_message(
                     f"BUY executed at {buy_price:.4f} € for {cost:.2f} €"
                 )
             self.open_buy_low = None
@@ -206,7 +207,7 @@ class LimitCycleBot(BaseChatBot):
             sell_price = target_price * (1 - self.settings.safety_offset / 100)
             self.open_sell = LimitOrder("sell", sell_price, amount)
             if self.settings.debug:
-                print(
+                lib.highlight_message(
                     f"Sell order placed at {sell_price:.4f} € for target profit"
                 )
         elif self.open_buy_high and price >= self.open_buy_high.price:
@@ -218,7 +219,7 @@ class LimitCycleBot(BaseChatBot):
             self.asset_balance += amount
             self.last_buy_price = buy_price
             if self.settings.debug:
-                print(
+                lib.highlight_message(
                     f"BUY executed at {buy_price:.4f} € for {cost:.2f} €"
                 )
             self.open_buy_low = None
@@ -227,7 +228,7 @@ class LimitCycleBot(BaseChatBot):
             sell_price = target_price * (1 - self.settings.safety_offset / 100)
             self.open_sell = LimitOrder("sell", sell_price, amount)
             if self.settings.debug:
-                print(
+                lib.highlight_message(
                     f"Sell order placed at {sell_price:.4f} € for target profit"
                 )
 
