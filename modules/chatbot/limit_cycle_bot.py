@@ -343,11 +343,11 @@ class LimitCycleBot(BaseChatBot):
                     self.open_stop_loss = LimitOrder("sell", stop_price, amount)
 
     # --- Main loop -------------------------------------------------------
-    def run(self, max_iterations: int | None = None) -> None:
+    def run(self, max_iterations: int | None = None, *, log_dir: str = "log") -> None:
         """Run the trading loop until interrupted or ``max_iterations`` reached."""
-        os.makedirs("log", exist_ok=True)
+        os.makedirs(log_dir, exist_ok=True)
         self.log_file_path = os.path.join(
-            "log", f"limit_cycle_{int(self.start_time)}.log"
+            log_dir, f"limit_cycle_{int(self.start_time)}.log"
         )
         with open(self.log_file_path, "w") as fh:
             fh.write("Settings:\n")
