@@ -28,7 +28,9 @@ class CycleSettings:
     enable_stop_loss: bool = False  # activate stop-loss handling
     stop_loss_percent: float = 2.0  # loss threshold relative to buy price
     debug: bool = True  # print debug information
-    log_interval_terminal: int = 1  # number of refresh cycles between terminal log output
+    log_interval_terminal: int = (
+        1  # number of refresh cycles between terminal log output
+    )
     log_interval_file: int = 1  # number of refresh cycles between file log output
     auto_log: bool = True  # only output logs when values change
 
@@ -99,28 +101,37 @@ class LimitCycleBot(BaseChatBot):
             "asset_balance": round(self.asset_balance, 8),
             "current_buy_amount": round(self.current_buy_amount, 2),
             "total_profit": round(self.total_profit, 2),
-            "last_buy_price": round(self.last_buy_price, 4) if self.last_buy_price else None,
-            "open_buy_low": round(self.open_buy_low.price, 4) if self.open_buy_low else None,
-            "open_buy_high": round(self.open_buy_high.price, 4) if self.open_buy_high else None,
+            "last_buy_price": (
+                round(self.last_buy_price, 4) if self.last_buy_price else None
+            ),
+            "open_buy_low": (
+                round(self.open_buy_low.price, 4) if self.open_buy_low else None
+            ),
+            "open_buy_high": (
+                round(self.open_buy_high.price, 4) if self.open_buy_high else None
+            ),
             "open_sell": round(self.open_sell.price, 4) if self.open_sell else None,
-            "open_stop_loss": round(self.open_stop_loss.price, 4) if self.open_stop_loss else None,
+            "open_stop_loss": (
+                round(self.open_stop_loss.price, 4) if self.open_stop_loss else None
+            ),
         }
+
     def _waiting_for(self) -> str:
         if self.open_stop_loss:
             return f"stop loss <= {self.open_stop_loss.price:.4f} €"
         if self.open_sell:
             return f"sell >= {self.open_sell.price:.4f} €"
         if self.open_buy_low and self.open_buy_high:
-            return (
-                f"buy <= {self.open_buy_low.price:.4f} € or >= {self.open_buy_high.price:.4f} €"
-            )
+            return f"buy <= {self.open_buy_low.price:.4f} € or >= {self.open_buy_high.price:.4f} €"
         if self.open_buy_low:
             return f"buy <= {self.open_buy_low.price:.4f} €"
         if self.open_buy_high:
             return f"buy >= {self.open_buy_high.price:.4f} €"
         return "new cycle"
 
-    def _log(self, price: float, *, to_terminal: bool = True, to_file: bool = False) -> None:
+    def _log(
+        self, price: float, *, to_terminal: bool = True, to_file: bool = False
+    ) -> None:
         """Output portfolio status to terminal and/or file.
 
         When ``settings.auto_log`` is True, logs are printed only when any
@@ -140,7 +151,9 @@ class LimitCycleBot(BaseChatBot):
         current_value = self.eur_balance + self.asset_balance * price
         elapsed = int(time.time() - self.start_time)
         asset_label = (
-            self.settings.pair if self.settings.use_kraken_price else self.settings.symbol
+            self.settings.pair
+            if self.settings.use_kraken_price
+            else self.settings.symbol
         )
         lines = [
             f"[LOG {elapsed}s] Portfolio Status:",
@@ -162,9 +175,7 @@ class LimitCycleBot(BaseChatBot):
             lines.append("")
             lines.append("Offene Orders:")
             if self.open_sell:
-                lines.append(
-                    f"  – Sell @ {self.open_sell.price:.4f} € (Take Profit)"
-                )
+                lines.append(f"  – Sell @ {self.open_sell.price:.4f} € (Take Profit)")
             if self.open_buy_low:
                 lines.append(f"  – Buy @ {self.open_buy_low.price:.4f} € (Rebuy)")
             if self.open_stop_loss:
@@ -200,7 +211,9 @@ class LimitCycleBot(BaseChatBot):
                 fh.write(total_line + "\n")
                 fh.write("\n")
 
-    def _execute_sell(self, sell_price: float, amount: float, stop_loss: bool = False) -> None:
+    def _execute_sell(
+        self, sell_price: float, amount: float, stop_loss: bool = False
+    ) -> None:
         eur_received = amount * sell_price
         self.eur_balance += eur_received
         self.asset_balance = 0.0
@@ -248,9 +261,7 @@ class LimitCycleBot(BaseChatBot):
         self.high_since_buy = None
         self.low_since_sell = None
         if self.settings.debug:
-            lib.highlight_message(
-                f"Initial buy order placed at {high_price:.4f} €"
-            )
+            lib.highlight_message(f"Initial buy order placed at {high_price:.4f} €")
 
     def _update_sell_order(self, price: float) -> None:
         if self.last_buy_price is None or self.asset_balance <= 0:
@@ -259,7 +270,9 @@ class LimitCycleBot(BaseChatBot):
         if self.high_since_buy is None or price > self.high_since_buy:
             self.high_since_buy = price
 
-        target_price = self.last_buy_price * (1 + self.settings.take_profit_percent / 100)
+        target_price = self.last_buy_price * (
+            1 + self.settings.take_profit_percent / 100
+        )
 
         if self.open_sell:
             new_price = self.high_since_buy * (1 - self.settings.safety_offset / 100)
@@ -273,7 +286,9 @@ class LimitCycleBot(BaseChatBot):
                 self._execute_sell(self.open_sell.price, self.open_sell.amount)
         else:
             if self.high_since_buy >= target_price:
-                sell_price = self.high_since_buy * (1 - self.settings.safety_offset / 100)
+                sell_price = self.high_since_buy * (
+                    1 - self.settings.safety_offset / 100
+                )
                 self.open_sell = LimitOrder("sell", sell_price, self.asset_balance)
                 if self.settings.debug:
                     lib.highlight_message(
@@ -343,12 +358,18 @@ class LimitCycleBot(BaseChatBot):
                     self.open_stop_loss = LimitOrder("sell", stop_price, amount)
 
     # --- Main loop -------------------------------------------------------
-    def run(self, max_iterations: int | None = None, *, log_dir: str = "log") -> None:
+    def run(
+        self,
+        max_iterations: int | None = None,
+        *,
+        log_dir: str = "log",
+        log_name: str | None = None,
+    ) -> None:
         """Run the trading loop until interrupted or ``max_iterations`` reached."""
         os.makedirs(log_dir, exist_ok=True)
-        self.log_file_path = os.path.join(
-            log_dir, f"limit_cycle_{int(self.start_time)}.log"
-        )
+        timestamp = int(self.start_time * 1000)
+        filename = log_name or f"limit_cycle_{timestamp}.log"
+        self.log_file_path = os.path.join(log_dir, filename)
         with open(self.log_file_path, "w") as fh:
             fh.write("Settings:\n")
             json.dump(asdict(self.settings), fh, indent=2)
