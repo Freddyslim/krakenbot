@@ -82,20 +82,27 @@ class LimitCycleBot(BaseChatBot):
         elapsed = int(time.time() - self.start_time)
         lines = [
             f"[LOG {elapsed}s] Portfolio Status:",
+            f"Asset:               {self.settings.symbol}",
+            f"Aktueller Kurs:      {price:.4f} €",
             f"Startkapital:        {self.settings.initial_portfolio_eur:.2f} €",
             f"Aktueller Wert:      {current_value:.2f} €",
             f"Eingesetzt:          {self.current_buy_amount:.2f} €",
             f"Freies Kapital:      {self.eur_balance:.2f} €",
         ]
+        if self.asset_balance > 0:
+            asset = self.settings.symbol.split("-")[0]
+            lines.append(f"Bestand:            {self.asset_balance:.8f} {asset}")
         if self.last_buy_price:
             lines.append(f"Letzter Kaufkurs:    {self.last_buy_price:.4f} €")
-        lines.append("Offene Orders:")
-        if self.open_sell:
-            lines.append(
-                f"  – Sell @ {self.open_sell.price:.4f} € (Take Profit)"
-            )
-        if self.open_buy_low:
-            lines.append(f"  – Buy @ {self.open_buy_low.price:.4f} € (Rebuy)")
+        if self.open_sell or self.open_buy_low:
+            lines.append("")
+            lines.append("Offene Orders:")
+            if self.open_sell:
+                lines.append(
+                    f"  – Sell @ {self.open_sell.price:.4f} € (Take Profit)"
+                )
+            if self.open_buy_low:
+                lines.append(f"  – Buy @ {self.open_buy_low.price:.4f} € (Rebuy)")
         lines.append(f"Warte auf: {self._waiting_for()}")
         if self.settings.debug:
             print("\n".join(lines))
