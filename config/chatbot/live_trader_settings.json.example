@@ -1,5 +1,5 @@
 {
-    "symbol": "BTC-USD",
+    "symbol": "BTC-EUR",
     "lookback_days": 30,
     "interval": "1h",
     "trade_amount": 1000,

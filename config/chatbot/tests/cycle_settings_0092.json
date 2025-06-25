@@ -1,0 +1,18 @@
+{
+  "symbol": "XRP-EUR",
+  "pair": "XRPEUR",
+  "use_kraken_price": false,
+  "refresh_rate": 2,
+  "startbuy_threshold": 0.62,
+  "initial_portfolio_eur": 2000,
+  "reinvestment_percent": 25,
+  "take_profit_percent": 0.77,
+  "buyback_percent": 0.95,
+  "safety_offset": 0.37,
+  "enable_stop_loss": true,
+  "stop_loss_percent": 4.28,
+  "debug": false,
+  "log_interval_terminal": 1,
+  "log_interval_file": 1,
+  "auto_log": true
+}

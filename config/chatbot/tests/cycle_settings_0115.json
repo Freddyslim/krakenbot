@@ -1,0 +1,18 @@
+{
+  "symbol": "ADA-EUR",
+  "pair": "ADAEUR",
+  "use_kraken_price": false,
+  "refresh_rate": 4,
+  "startbuy_threshold": 0.93,
+  "initial_portfolio_eur": 500,
+  "reinvestment_percent": 30,
+  "take_profit_percent": 1.51,
+  "buyback_percent": 0.46,
+  "safety_offset": 0.42,
+  "enable_stop_loss": false,
+  "stop_loss_percent": 3.26,
+  "debug": false,
+  "log_interval_terminal": 1,
+  "log_interval_file": 1,
+  "auto_log": true
+}

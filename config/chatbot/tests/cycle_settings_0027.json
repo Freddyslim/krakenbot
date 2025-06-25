@@ -1,0 +1,18 @@
+{
+  "symbol": "SOL-EUR",
+  "pair": "SOLEUR",
+  "use_kraken_price": false,
+  "refresh_rate": 1,
+  "startbuy_threshold": 0.61,
+  "initial_portfolio_eur": 2000,
+  "reinvestment_percent": 29,
+  "take_profit_percent": 0.61,
+  "buyback_percent": 0.49,
+  "safety_offset": 0.33,
+  "enable_stop_loss": true,
+  "stop_loss_percent": 2.86,
+  "debug": false,
+  "log_interval_terminal": 1,
+  "log_interval_file": 1,
+  "auto_log": false
+}

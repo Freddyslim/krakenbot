@@ -1,0 +1,18 @@
+{
+  "symbol": "BTC-EUR",
+  "pair": "XBTEUR",
+  "use_kraken_price": false,
+  "refresh_rate": 1,
+  "startbuy_threshold": 0.9,
+  "initial_portfolio_eur": 1000,
+  "reinvestment_percent": 29,
+  "take_profit_percent": 1.38,
+  "buyback_percent": 0.71,
+  "safety_offset": 0.43,
+  "enable_stop_loss": false,
+  "stop_loss_percent": 2.83,
+  "debug": false,
+  "log_interval_terminal": 1,
+  "log_interval_file": 1,
+  "auto_log": false
+}

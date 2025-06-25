@@ -8,7 +8,7 @@ Kopiere `config/chatbot/live_trader_settings.json.example` nach `config/chatbot/
 
 ```json
 {
-    "symbol": "BTC-USD",
+    "symbol": "BTC-EUR",
     "lookback_days": 30,
     "interval": "1h",
     "trade_amount": 1000,
@@ -23,7 +23,7 @@ Kopiere `config/chatbot/live_trader_settings.json.example` nach `config/chatbot/
 
 ### Felder
 
-- **symbol** – Ticker‑Symbol für Yahoo Finance (z. B. `BTC-USD`).
+- **symbol** – Ticker‑Symbol für Yahoo Finance (z. B. `BTC-EUR`).
 - **lookback_days** – Wie viele Tage an Historie beim Abruf verwendet werden.
 - **interval** – Zeitintervall der historischen Daten (`1h`, `1d` …).
 - **trade_amount** – Virtuelles Startkapital, das beim ersten Kaufsignal eingesetzt wird.

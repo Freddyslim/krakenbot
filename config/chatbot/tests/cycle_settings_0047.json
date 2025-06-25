@@ -1,0 +1,18 @@
+{
+  "symbol": "LINK-EUR",
+  "pair": "LINKEUR",
+  "use_kraken_price": false,
+  "refresh_rate": 1,
+  "startbuy_threshold": 0.72,
+  "initial_portfolio_eur": 1500,
+  "reinvestment_percent": 10,
+  "take_profit_percent": 1.91,
+  "buyback_percent": 0.67,
+  "safety_offset": 0.14,
+  "enable_stop_loss": true,
+  "stop_loss_percent": 2.81,
+  "debug": false,
+  "log_interval_terminal": 1,
+  "log_interval_file": 1,
+  "auto_log": false
+}

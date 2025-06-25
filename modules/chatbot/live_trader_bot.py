@@ -16,7 +16,7 @@ import yfinance as yf
 class LiveSettings:
     """Configuration for :class:`LiveTraderBot`."""
 
-    symbol: str = "BTC-USD"  # ticker symbol
+    symbol: str = "BTC-EUR"  # ticker symbol
     lookback_days: int = 30  # days of data to analyse
     interval: str = "1h"  # data granularity
     trade_amount: float = 1000.0  # amount used per trade
