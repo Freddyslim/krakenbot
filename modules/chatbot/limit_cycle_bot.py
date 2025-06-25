@@ -6,26 +6,34 @@ import json
 import time
 from dataclasses import dataclass
 from typing import Optional
+import re
 
 from .base import BaseChatBot
 
 
 @dataclass
 class CycleSettings:
-    symbol: str = "BTC-USD"
-    refresh_rate: int = 2  # seconds
-    startbuy_threshold: float = 0.4  # total percent difference between start orders
-    initial_portfolio_eur: float = 1000.0
-    reinvestment_percent: float = 15.0
-    take_profit_percent: float = 0.8
-    buyback_percent: float = 0.5
-    safety_offset: float = 0.15
-    debug: bool = True
+    symbol: str = "BTC-USD"  # Yahoo Finance symbol
+    refresh_rate: int = 2  # seconds between price checks
+    startbuy_threshold: float = 0.4  # % difference between initial buy orders
+    initial_portfolio_eur: float = 1000.0  # starting capital
+    reinvestment_percent: float = 15.0  # % of balance used after each cycle
+    take_profit_percent: float = 0.8  # target profit before selling
+    buyback_percent: float = 0.5  # drop from sell price before rebuy
+    safety_offset: float = 0.15  # margin on limit orders
+    debug: bool = True  # print debug information
+    log_interval: int = 1  # number of refresh cycles between log output
 
     @staticmethod
     def load(filename: str) -> "CycleSettings":
         with open(filename, "r") as fh:
-            data = json.load(fh)
+            text = fh.read()
+        lines = []
+        for line in text.splitlines():
+            line = line.split("//", 1)[0]
+            line = line.split("#", 1)[0]
+            lines.append(line)
+        data = json.loads("\n".join(lines))
         valid = {k: v for k, v in data.items() if k in CycleSettings.__annotations__}
         return CycleSettings(**valid)
 
@@ -53,8 +61,22 @@ class LimitCycleBot(BaseChatBot):
         self.high_since_buy: Optional[float] = None
         self.low_since_sell: Optional[float] = None
         self.start_time = time.time()
+        self.log_counter = 0
 
     # --- Helpers ---------------------------------------------------------
+    def _waiting_for(self) -> str:
+        if self.open_sell:
+            return f"sell >= {self.open_sell.price:.4f} €"
+        if self.open_buy_low and self.open_buy_high:
+            return (
+                f"buy <= {self.open_buy_low.price:.4f} € or >= {self.open_buy_high.price:.4f} €"
+            )
+        if self.open_buy_low:
+            return f"buy <= {self.open_buy_low.price:.4f} €"
+        if self.open_buy_high:
+            return f"buy >= {self.open_buy_high.price:.4f} €"
+        return "new cycle"
+
     def _log(self, price: float) -> None:
         current_value = self.eur_balance + self.asset_balance * price
         elapsed = int(time.time() - self.start_time)
@@ -74,6 +96,7 @@ class LimitCycleBot(BaseChatBot):
             )
         if self.open_buy_low:
             lines.append(f"  – Buy @ {self.open_buy_low.price:.4f} € (Rebuy)")
+        lines.append(f"Warte auf: {self._waiting_for()}")
         if self.settings.debug:
             print("\n".join(lines))
             if self.last_profit:
@@ -215,7 +238,9 @@ class LimitCycleBot(BaseChatBot):
                 continue
             self._update_buy_orders(price)
             self._update_sell_order(price)
-            self._log(price)
+            self.log_counter += 1
+            if self.log_counter % self.settings.log_interval == 0:
+                self._log(price)
             time.sleep(self.settings.refresh_rate)
 
 

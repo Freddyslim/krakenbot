@@ -16,7 +16,8 @@ Copy `config/chatbot/limit_cycle_settings.json.example` to `config/chatbot/limit
     "take_profit_percent": 0.8,
     "buyback_percent": 0.5,
     "safety_offset": 0.15,
-    "debug": true
+    "debug": true,
+    "log_interval": 1
 }
 ```
 
@@ -31,6 +32,7 @@ Copy `config/chatbot/limit_cycle_settings.json.example` to `config/chatbot/limit
 - **buyback_percent** – Price drop below the last sell price before a new buy is placed.
 - **safety_offset** – Offset applied to limit orders to increase the chance of execution.
 - **debug** – If `true`, the bot prints all status information to the console.
+- **log_interval** – Number of refresh cycles between log outputs.
 
 ## Running the bot
 

@@ -16,21 +16,27 @@ import yfinance as yf
 class LiveSettings:
     """Configuration for :class:`LiveTraderBot`."""
 
-    symbol: str = "BTC-USD"
-    lookback_days: int = 30
-    interval: str = "1h"
-    trade_amount: float = 1000.0
-    profit_target_pct: float = 1.5
-    check_interval: int = 30
-    slope_window_minutes: int = 10
-    debug: bool = True
-    telegram_enabled: bool = False
-    telegram_settings_file: str = "config/telegram/bot_settings.json"
+    symbol: str = "BTC-USD"  # ticker symbol
+    lookback_days: int = 30  # days of data to analyse
+    interval: str = "1h"  # data granularity
+    trade_amount: float = 1000.0  # amount used per trade
+    profit_target_pct: float = 1.5  # desired profit percentage
+    check_interval: int = 30  # seconds between price checks
+    slope_window_minutes: int = 10  # trend calculation window
+    debug: bool = True  # verbose output
+    telegram_enabled: bool = False  # send updates via telegram
+    telegram_settings_file: str = "config/telegram/bot_settings.json"  # telegram config
 
     @staticmethod
     def load(filename: str) -> "LiveSettings":
         with open(filename, "r") as fh:
-            data = json.load(fh)
+            text = fh.read()
+        lines: list[str] = []
+        for line in text.splitlines():
+            line = line.split("//", 1)[0]
+            line = line.split("#", 1)[0]
+            lines.append(line)
+        data = json.loads("\n".join(lines))
         valid = {k: v for k, v in data.items() if k in LiveSettings.__annotations__}
         return LiveSettings(**valid)
 

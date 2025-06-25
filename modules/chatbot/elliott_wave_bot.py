@@ -21,17 +21,23 @@ class Trade:
 
 @dataclass
 class Settings:
-    symbol: str = "BTC-USD"
-    period: str = "1y"
-    interval: str = "1d"
-    profit_pct: float = 2.0
-    start_balance: float = 1000.0
-    wave_threshold_pct: float = 2.5
+    symbol: str = "BTC-USD"  # Yahoo symbol
+    period: str = "1y"  # historical data period
+    interval: str = "1d"  # data interval
+    profit_pct: float = 2.0  # profit target per trade
+    start_balance: float = 1000.0  # initial capital for simulation
+    wave_threshold_pct: float = 2.5  # % move defining a wave
 
     @staticmethod
     def load(filename: str) -> "Settings":
         with open(filename, "r") as fh:
-            data = json.load(fh)
+            text = fh.read()
+        lines: list[str] = []
+        for line in text.splitlines():
+            line = line.split("//", 1)[0]
+            line = line.split("#", 1)[0]
+            lines.append(line)
+        data = json.loads("\n".join(lines))
         return Settings(**data)
 
 
