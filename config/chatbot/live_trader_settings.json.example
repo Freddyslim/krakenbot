@@ -1,12 +1,12 @@
 {
-    "symbol": "BTC-USD",
-    "lookback_days": 30,
-    "interval": "1h",
-    "trade_amount": 1000,
-    "profit_target_pct": 1.5,
-    "check_interval": 30,
-    "slope_window_minutes": 10,
-    "debug": true,
-    "telegram_enabled": false,
-    "telegram_settings_file": "config/telegram/bot_settings.json"
+    "symbol": "BTC-USD",                           // ticker symbol
+    "lookback_days": 30,                           // days of data to analyse
+    "interval": "1h",                              // candle interval
+    "trade_amount": 1000,                          // starting capital
+    "profit_target_pct": 1.5,                      // profit target per trade
+    "check_interval": 30,                          // seconds between checks
+    "slope_window_minutes": 10,                    // window for trend slope
+    "debug": true,                                 // verbose output
+    "telegram_enabled": false,                     // enable Telegram messages
+    "telegram_settings_file": "config/telegram/bot_settings.json" // Telegram config path
 }

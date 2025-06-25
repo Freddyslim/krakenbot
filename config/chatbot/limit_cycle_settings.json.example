@@ -1,11 +1,12 @@
 {
-    "symbol": "BTC-USD",
-    "refresh_rate": 2,
-    "startbuy_threshold": 0.4,
-    "initial_portfolio_eur": 1000,
-    "reinvestment_percent": 15,
-    "take_profit_percent": 0.8,
-    "buyback_percent": 0.5,
-    "safety_offset": 0.15,
-    "debug": true
+    "symbol": "BTC-USD",            // Yahoo Finance symbol used for pricing
+    "refresh_rate": 2,              // Seconds between price checks
+    "startbuy_threshold": 0.4,      // % spread between the initial buy orders
+    "initial_portfolio_eur": 1000,  // Starting capital in Euro
+    "reinvestment_percent": 15,     // % of balance used for the next cycle
+    "take_profit_percent": 0.8,     // Desired profit before selling
+    "buyback_percent": 0.5,         // Price drop after a sell to trigger a buy
+    "safety_offset": 0.15,          // Extra margin for limit orders
+    "debug": true,                  // Print detailed logs
+    "log_interval": 1               // Log output every log_interval * refresh_rate seconds
 }
