@@ -1,5 +1,7 @@
 {
     "symbol": "BTC-USD",
+    "pair": "XBTEUR",
+    "use_kraken_price": false,
     "refresh_rate": 2,
     "startbuy_threshold": 0.4,
     "initial_portfolio_eur": 1000,

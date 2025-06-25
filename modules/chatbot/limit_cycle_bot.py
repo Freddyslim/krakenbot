@@ -16,6 +16,8 @@ import lib.lib as lib
 @dataclass
 class CycleSettings:
     symbol: str = "BTC-USD"  # Yahoo Finance symbol
+    pair: str = "XBTEUR"  # Kraken trading pair
+    use_kraken_price: bool = False  # fetch price from Kraken instead of Yahoo
     refresh_rate: int = 2  # seconds between price checks
     startbuy_threshold: float = 0.4  # % difference between initial buy orders
     initial_portfolio_eur: float = 1000.0  # starting capital
@@ -74,6 +76,20 @@ class LimitCycleBot(BaseChatBot):
         self._last_snapshot_file: Optional[dict] = None
 
     # --- Helpers ---------------------------------------------------------
+    def _get_price(self) -> float | None:
+        """Return the latest price from the configured source."""
+        if self.settings.use_kraken_price:
+            data = self.fetch_kraken_ticker(self.settings.pair)
+            if not data or data.get("error"):
+                return None
+            result = data.get("result")
+            if not result:
+                return None
+            info = next(iter(result.values()))
+            last = info.get("c", [None])[0]
+            return float(last) if last is not None else None
+        return self.fetch_yahoo_price(self.settings.symbol)
+
     def _create_snapshot(self, price: float) -> dict:
         """Return the current state values for change detection."""
         return {
@@ -121,9 +137,12 @@ class LimitCycleBot(BaseChatBot):
 
         current_value = self.eur_balance + self.asset_balance * price
         elapsed = int(time.time() - self.start_time)
+        asset_label = (
+            self.settings.pair if self.settings.use_kraken_price else self.settings.symbol
+        )
         lines = [
             f"[LOG {elapsed}s] Portfolio Status:",
-            f"Asset:               {self.settings.symbol}",
+            f"Asset:               {asset_label}",
             f"Aktueller Kurs:      {price:.4f} €",
             f"Startkapital:        {self.settings.initial_portfolio_eur:.2f} €",
             f"Aktueller Wert:      {current_value:.2f} €",
@@ -132,6 +151,8 @@ class LimitCycleBot(BaseChatBot):
         ]
         if self.asset_balance > 0:
             asset = self.settings.symbol.split("-")[0]
+            if self.settings.use_kraken_price:
+                asset = self.settings.pair[:3]
             lines.append(f"Bestand:            {self.asset_balance:.8f} {asset}")
         if self.last_buy_price:
             lines.append(f"Letzter Kaufkurs:    {self.last_buy_price:.4f} €")
@@ -328,14 +349,14 @@ class LimitCycleBot(BaseChatBot):
 
         reason = "completed"
         try:
-            price = self.fetch_yahoo_price(self.settings.symbol)
+            price = self._get_price()
             if price is None:
                 print("Failed to fetch initial price")
                 reason = "failed to fetch initial price"
                 return
             self._place_start_orders(price)
             while True:
-                price = self.fetch_yahoo_price(self.settings.symbol)
+                price = self._get_price()
                 if price is None:
                     time.sleep(self.settings.refresh_rate)
                     continue
