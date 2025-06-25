@@ -46,13 +46,16 @@ def random_setting(pair: str) -> dict:
     s["refresh_rate"] = random.randint(1, 5)
     s["startbuy_threshold"] = round(random.uniform(0.2, 1.0), 2)
     s["initial_portfolio_eur"] = random.choice([500, 1000, 1500, 2000])
-    s["reinvestment_percent"] = random.randint(10, 30)
+    # use more aggressive reinvestment
+    s["reinvestment_percent"] = random.randint(25, 40)
     s["take_profit_percent"] = round(random.uniform(0.5, 2.0), 2)
     s["buyback_percent"] = round(random.uniform(0.3, 1.0), 2)
-    s["safety_offset"] = round(random.uniform(0.1, 0.5), 2)
+    # lower safety offset for more aggressive behaviour
+    s["safety_offset"] = round(random.uniform(0.05, 0.25), 2)
     s["enable_stop_loss"] = random.choice([True, False])
     s["stop_loss_percent"] = round(random.uniform(1.5, 5.0), 2)
-    s["auto_log"] = random.choice([True, False])
+    # always keep auto_log enabled for test runs
+    s["auto_log"] = True
     return s
 
 def main(count_per_pair: int = 20) -> None:

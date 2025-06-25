@@ -3,16 +3,16 @@
   "pair": "ETHEUR",
   "use_kraken_price": false,
   "refresh_rate": 4,
-  "startbuy_threshold": 0.5,
+  "startbuy_threshold": 0.69,
   "initial_portfolio_eur": 1500,
-  "reinvestment_percent": 26,
-  "take_profit_percent": 1.99,
-  "buyback_percent": 0.64,
-  "safety_offset": 0.41,
+  "reinvestment_percent": 37,
+  "take_profit_percent": 1.33,
+  "buyback_percent": 0.98,
+  "safety_offset": 0.18,
   "enable_stop_loss": false,
-  "stop_loss_percent": 4.11,
+  "stop_loss_percent": 2.03,
   "debug": false,
   "log_interval_terminal": 1,
   "log_interval_file": 1,
-  "auto_log": false
+  "auto_log": true
 }
