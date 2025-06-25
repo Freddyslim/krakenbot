@@ -61,6 +61,7 @@ class LimitCycleBot(BaseChatBot):
         self.eur_balance = settings.initial_portfolio_eur
         self.asset_balance = 0.0
         self.last_profit: Optional[dict] = None
+        self.total_profit: float = 0.0
         self.current_buy_amount = settings.initial_portfolio_eur
         self.last_buy_price: Optional[float] = None
         self.open_buy_low: Optional[LimitOrder] = None
@@ -97,6 +98,7 @@ class LimitCycleBot(BaseChatBot):
             "eur_balance": round(self.eur_balance, 2),
             "asset_balance": round(self.asset_balance, 8),
             "current_buy_amount": round(self.current_buy_amount, 2),
+            "total_profit": round(self.total_profit, 2),
             "last_buy_price": round(self.last_buy_price, 4) if self.last_buy_price else None,
             "open_buy_low": round(self.open_buy_low.price, 4) if self.open_buy_low else None,
             "open_buy_high": round(self.open_buy_high.price, 4) if self.open_buy_high else None,
@@ -181,10 +183,13 @@ class LimitCycleBot(BaseChatBot):
                 f"  Gewinn: {lp['profit_eur']:+.2f} € ({lp['profit_pct']:+.2f} %)",
             ]
 
+        total_line = f"Gesamtgewinn: {self.total_profit:+.2f} €"
+
         if to_terminal and self.settings.debug:
             print("\n".join(lines))
             if profit_lines:
                 print("\n".join(profit_lines))
+            print(total_line)
             print()
 
         if to_file:
@@ -192,6 +197,7 @@ class LimitCycleBot(BaseChatBot):
                 fh.write("\n".join(lines) + "\n")
                 if profit_lines:
                     fh.write("\n".join(profit_lines) + "\n")
+                fh.write(total_line + "\n")
                 fh.write("\n")
 
     def _execute_sell(self, sell_price: float, amount: float, stop_loss: bool = False) -> None:
@@ -201,6 +207,7 @@ class LimitCycleBot(BaseChatBot):
         buy_eur = self.current_buy_amount
         profit_eur = eur_received - buy_eur
         profit_pct = profit_eur / buy_eur * 100
+        self.total_profit += profit_eur
         self.last_profit = {
             "buy_eur": buy_eur,
             "buy_price": self.last_buy_price,

@@ -54,4 +54,4 @@ Start the chatbot menu and select the LimitCycleBot or run it directly:
 python -m modules.chatbot.limit_cycle_bot
 ```
 
-The bot starts with a limit buy order slightly above the current price. After it fills, a stop-loss order is placed immediately. The take-profit sell order is only created once the price first reaches the configured target and then trails the price upwards. Once the position is closed, a new buy order is prepared. Each log output also shows the last realised profit once a full buy/sell cycle was completed.
+The bot starts with a limit buy order slightly above the current price. After it fills, a stop-loss order is placed immediately. The take-profit sell order is only created once the price first reaches the configured target and then trails the price upwards. Once the position is closed, a new buy order is prepared. Each log output shows the last realised profit and the accumulated *Gesamtgewinn* across all cycles.
