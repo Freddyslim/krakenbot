@@ -102,7 +102,7 @@ Another demo called `ElliottWaveBot` performs a very rough Elliott wave
 analysis on historical prices and simulates trades based on configurable
 criteria.
 `LimitCycleBot` demonstrates repeated limit orders with a small portfolio and
-reports the last realised profit after each trade cycle.
+reports both the last realised profit and the running total after each trade cycle.
 Start it from the main menu or directly via:
 
 ```bash
