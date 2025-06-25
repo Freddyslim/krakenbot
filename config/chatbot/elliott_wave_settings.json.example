@@ -1,7 +1,7 @@
 {
-    "symbol": "BTC-EUR",
-    "period": "1y",
-    "interval": "1d",
+    "pair": "XBTEUR",
+    "lookback_days": 365,
+    "interval": 1440,
     "profit_pct": 2.0,
     "start_balance": 1000,
     "wave_threshold_pct": 2.5

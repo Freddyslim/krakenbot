@@ -13,9 +13,9 @@ Copy `config/chatbot/elliott_wave_settings.json.example` to
 
 ```json
 {
-    "symbol": "BTC-EUR",
-    "period": "1y",
-    "interval": "1d",
+    "pair": "XBTEUR",
+    "lookback_days": 365,
+    "interval": 1440,
     "profit_pct": 2.0,
     "start_balance": 1000,
     "wave_threshold_pct": 2.5
@@ -24,8 +24,7 @@ Copy `config/chatbot/elliott_wave_settings.json.example` to
 
 ### Options
 
-- **symbol** – Ticker symbol used with Yahoo Finance. Determines which asset
-  prices are analysed.
+- **pair** – Kraken trading pair used to retrieve price data.
 - **period** – How far back the historical data should go (e.g. `1y` for one
   year or `6mo` for six months).
 - **interval** – Resolution of the price data (`1d`, `1h`, etc.). Shorter
@@ -40,16 +39,12 @@ Copy `config/chatbot/elliott_wave_settings.json.example` to
 
 ### Valid periods and intervals
 
-Historical data is requested via Yahoo Finance, which accepts specific strings
-for time ranges and resolutions:
+Historical data is requested via Kraken's OHLC endpoint, which accepts specific
+intervals:
 
-- **Periods**: `1d`, `5d`, `1mo`, `3mo`, `6mo`, `1y`, `2y`, `5y`, `10y`, `ytd`,
-  `max`
-- **Intervals**: `1m`, `2m`, `5m`, `15m`, `30m`, `60m`, `90m`, `1h`, `1d`, `5d`,
-  `1wk`, `1mo`, `3mo`
+- **Intervals**: `1`, `5`, `15`, `30`, `60`, `240`, `1440`, `10080`, `21600`
 
-Intraday intervals (`1m`–`1h`) are limited to roughly the last 60 days of
-history.
+Intraday intervals can be queried for roughly the last 60 days of history.
 
 Changing these values influences how many signals the bot will generate. For
 example, reducing `wave_threshold_pct` and `interval` leads to frequent trades

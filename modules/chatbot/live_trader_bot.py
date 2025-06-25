@@ -9,16 +9,16 @@ from dataclasses import dataclass, asdict
 from typing import Dict, Optional
 
 import pandas as pd
-import yfinance as yf
+from lib import kraken_api
 
 
 @dataclass
 class LiveSettings:
     """Configuration for :class:`LiveTraderBot`."""
 
-    symbol: str = "BTC-EUR"  # ticker symbol
+    pair: str = "XBTEUR"  # trading pair
     lookback_days: int = 30  # days of data to analyse
-    interval: str = "1h"  # data granularity
+    interval: int = 60  # data granularity in minutes
     trade_amount: float = 1000.0  # amount used per trade
     profit_target_pct: float = 1.5  # desired profit percentage
     check_interval: int = 30  # seconds between price checks
@@ -77,10 +77,14 @@ class LiveTraderBot:
                 self.settings.telegram_enabled = False
 
     def _fetch_data(self) -> pd.DataFrame:
-        ticker = yf.Ticker(self.settings.symbol)
-        period = f"{self.settings.lookback_days}d"
-        df = ticker.history(period=period, interval=self.settings.interval)
-        return df.dropna()
+        since = int((pd.Timestamp.utcnow() - pd.Timedelta(days=self.settings.lookback_days)).timestamp())
+        resp = kraken_api.ohlc(self.settings.pair, interval=self.settings.interval, since=since)
+        data = resp.get("result", {}).get(self.settings.pair)
+        if not data:
+            return pd.DataFrame()
+        df = pd.DataFrame(data, columns=["time", "open", "high", "low", "close", "vwap", "volume", "count"])
+        df["time"] = pd.to_datetime(df["time"], unit="s")
+        return df.set_index("time")
 
     def _write_state(self, info: Dict) -> None:
         try:
@@ -164,10 +168,7 @@ class LiveTraderBot:
         self._log({"telegram_message": text})
 
     def _interval_seconds(self) -> int:
-        try:
-            return int(pd.Timedelta(self.settings.interval).total_seconds())
-        except ValueError:
-            return 0
+        return int(self.settings.interval * 60)
 
     def _compute_price_slope(self, prices: pd.Series) -> float:
         """Return price change per second over the configured slope window."""
@@ -193,14 +194,14 @@ class LiveTraderBot:
 
     def run(self) -> None:
         print(
-            f"Starting LiveTraderBot for {self.settings.symbol} with trade amount {self.settings.trade_amount}"
+            f"Starting LiveTraderBot for {self.settings.pair} with trade amount {self.settings.trade_amount}"
         )
         while True:
             df = self._fetch_data()
-            price = float(df["Close"].iloc[-1])
-            prev_price = float(df["Close"].iloc[-2]) if len(df) > 1 else price
-            short_ma = float(df["Close"].rolling(window=7).mean().iloc[-1])
-            long_ma = float(df["Close"].rolling(window=25).mean().iloc[-1])
+            price = float(df["close"].iloc[-1])
+            prev_price = float(df["close"].iloc[-2]) if len(df) > 1 else price
+            short_ma = float(df["close"].rolling(window=7).mean().iloc[-1])
+            long_ma = float(df["close"].rolling(window=25).mean().iloc[-1])
 
             window_points = max(
                 2,
@@ -209,7 +210,7 @@ class LiveTraderBot:
                 )
                 + 1,
             )
-            recent_prices = df["Close"].tail(window_points)
+            recent_prices = df["close"].tail(window_points)
             price_slope = self._compute_price_slope(recent_prices)
 
             action = None

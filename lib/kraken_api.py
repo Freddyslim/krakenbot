@@ -71,6 +71,14 @@ def ticker(pair: str = "XBTUSD") -> Dict:
     return public_request("Ticker", {"pair": pair})
 
 
+def ohlc(pair: str = "XBTUSD", interval: int = 1, since: int | None = None) -> Dict:
+    """Return OHLC data for a pair."""
+    params = {"pair": pair, "interval": interval}
+    if since is not None:
+        params["since"] = since
+    return public_request("OHLC", params)
+
+
 def get_open_orders(api_key: str, api_sec: str) -> Dict:
     return private_request("OpenOrders", {}, api_key, api_sec)
 

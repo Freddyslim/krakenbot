@@ -1,6 +1,6 @@
 # LiveTraderBot
 
-`LiveTraderBot` ist ein einfacher Bot, der kontinuierlich Kursdaten aus Yahoo Finance auswertet und anhand einer Moving-Average-Strategie Kauf- und Verkaufszeitpunkte simuliert. Er verschickt dabei lediglich Handlungsempfehlungen und führt keine echten Trades aus. Im Gegensatz zum `ElliottWaveBot` stoppt dieser Bot nicht nach einer Simulation, sondern läuft dauerhaft weiter und aktualisiert seine Berechnungen regelmäßig. Aktivierst du Telegram, werden die Empfehlungen an dein Chatfenster gesendet.
+`LiveTraderBot` ist ein einfacher Bot, der kontinuierlich Kursdaten von Kraken auswertet und anhand einer Moving-Average-Strategie Kauf- und Verkaufszeitpunkte simuliert. Er verschickt dabei lediglich Handlungsempfehlungen und führt keine echten Trades aus. Im Gegensatz zum `ElliottWaveBot` stoppt dieser Bot nicht nach einer Simulation, sondern läuft dauerhaft weiter und aktualisiert seine Berechnungen regelmäßig. Aktivierst du Telegram, werden die Empfehlungen an dein Chatfenster gesendet.
 
 ## Konfiguration
 
@@ -8,9 +8,9 @@ Kopiere `config/chatbot/live_trader_settings.json.example` nach `config/chatbot/
 
 ```json
 {
-    "symbol": "BTC-EUR",
+    "pair": "XBTEUR",
     "lookback_days": 30,
-    "interval": "1h",
+    "interval": 60,
     "trade_amount": 1000,
     "profit_target_pct": 1.5,
     "check_interval": 30,
@@ -23,7 +23,7 @@ Kopiere `config/chatbot/live_trader_settings.json.example` nach `config/chatbot/
 
 ### Felder
 
-- **symbol** – Ticker‑Symbol für Yahoo Finance (z. B. `BTC-EUR`).
+- **pair** – Kraken-Handelspaar (z. B. `XBTEUR`).
 - **lookback_days** – Wie viele Tage an Historie beim Abruf verwendet werden.
 - **interval** – Zeitintervall der historischen Daten (`1h`, `1d` …).
 - **trade_amount** – Virtuelles Startkapital, das beim ersten Kaufsignal eingesetzt wird.
@@ -36,19 +36,13 @@ Kopiere `config/chatbot/live_trader_settings.json.example` nach `config/chatbot/
 
 ### Gültige Zeitangaben
 
-Die Daten stammen von Yahoo Finance. Für `interval` kannst du eine der
+Die Daten stammen vom Kraken-OHLC-Endpunkt. Für `interval` kannst du eine der
 folgenden Auflösungen angeben:
 
 - `1m`, `2m`, `5m`, `15m`, `30m`, `60m`, `90m`, `1h`, `1d`, `5d`, `1wk`,
   `1mo`, `3mo`
 
-`lookback_days` wird intern zu einem `period`-String im Format `Nd`
-umgewandelt. Anstelle einer Tageszahl wären auch die
-Standardperioden von Yahoo Finance möglich:
-`1d`, `5d`, `1mo`, `3mo`, `6mo`, `1y`, `2y`, `5y`, `10y`, `ytd`, `max`.
-
-Bei Intervallen unterhalb von `1d` liefert Yahoo Finance lediglich Daten
-der letzten ca. 60 Tage.
+`lookback_days` wird in einen Zeitstempel für die Abfrage umgerechnet.
 
 Der Parameter `slope_window_minutes` wertet nur Kursdaten in diesem Zeitfenster aus.
 Für aussagekräftige Prognosen sollte `interval` deutlich kleiner als dieser
