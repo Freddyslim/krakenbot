@@ -19,7 +19,8 @@ Copy `config/chatbot/limit_cycle_settings.json.example` to `config/chatbot/limit
     "enable_stop_loss": false,
     "stop_loss_percent": 2.0,
     "debug": true,
-    "log_interval": 1
+    "log_interval_terminal": 1,
+    "log_interval_file": 1
 }
 ```
 
@@ -36,7 +37,8 @@ Copy `config/chatbot/limit_cycle_settings.json.example` to `config/chatbot/limit
 - **enable_stop_loss** – If `true`, the bot places a stop-loss order after each buy.
 - **stop_loss_percent** – Distance below the buy price at which the stop-loss triggers.
 - **debug** – If `true`, the bot prints all status information to the console.
-- **log_interval** – Number of refresh cycles between log outputs.
+- **log_interval_terminal** – Number of refresh cycles between terminal log outputs.
+- **log_interval_file** – Number of refresh cycles between file log entries.
 
 ## Running the bot
 

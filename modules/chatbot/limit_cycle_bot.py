@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import json
 import time
-from dataclasses import dataclass
+import os
+from dataclasses import dataclass, asdict
 from typing import Optional
 import re
 
@@ -25,7 +26,8 @@ class CycleSettings:
     enable_stop_loss: bool = False  # activate stop-loss handling
     stop_loss_percent: float = 2.0  # loss threshold relative to buy price
     debug: bool = True  # print debug information
-    log_interval: int = 1  # number of refresh cycles between log output
+    log_interval_terminal: int = 1  # number of refresh cycles between terminal log output
+    log_interval_file: int = 1  # number of refresh cycles between file log output
 
     @staticmethod
     def load(filename: str) -> "CycleSettings":
@@ -66,6 +68,7 @@ class LimitCycleBot(BaseChatBot):
         self.low_since_sell: Optional[float] = None
         self.start_time = time.time()
         self.log_counter = 0
+        self.log_file_path = ""
 
     # --- Helpers ---------------------------------------------------------
     def _waiting_for(self) -> str:
@@ -83,7 +86,8 @@ class LimitCycleBot(BaseChatBot):
             return f"buy >= {self.open_buy_high.price:.4f} €"
         return "new cycle"
 
-    def _log(self, price: float) -> None:
+    def _log(self, price: float, *, to_terminal: bool = True, to_file: bool = False) -> None:
+        """Output portfolio status to terminal and/or file."""
         current_value = self.eur_balance + self.asset_balance * price
         elapsed = int(time.time() - self.start_time)
         lines = [
@@ -114,16 +118,27 @@ class LimitCycleBot(BaseChatBot):
                     f"  – Stop @ {self.open_stop_loss.price:.4f} € (Stop Loss)"
                 )
         lines.append(f"Warte auf: {self._waiting_for()}")
-        if self.settings.debug:
+        profit_lines = []
+        if self.last_profit:
+            lp = self.last_profit
+            profit_lines = [
+                "",
+                "Letzter Profit:",
+                f"  Gekauft: {lp['buy_eur']:.2f} € @ {lp['buy_price']:.4f} €",
+                f"  Verkauft: {lp['sell_eur']:.2f} € @ {lp['sell_price']:.4f} €",
+                f"  Gewinn: {lp['profit_eur']:+.2f} € ({lp['profit_pct']:+.2f} %)",
+            ]
+
+        if to_terminal and self.settings.debug:
             print("\n".join(lines))
-            if self.last_profit:
-                lp = self.last_profit
-                print(
-                    "\nLetzter Profit:\n"
-                    f"  Gekauft: {lp['buy_eur']:.2f} € @ {lp['buy_price']:.4f} €\n"
-                    f"  Verkauft: {lp['sell_eur']:.2f} € @ {lp['sell_price']:.4f} €\n"
-                    f"  Gewinn: {lp['profit_eur']:+.2f} € ({lp['profit_pct']:+.2f} %)"
-                )
+            if profit_lines:
+                print("\n".join(profit_lines))
+
+        if to_file:
+            with open(self.log_file_path, "a") as fh:
+                fh.write("\n".join(lines) + "\n")
+                if profit_lines:
+                    fh.write("\n".join(profit_lines) + "\n")
 
     def _execute_sell(self, sell_price: float, amount: float, stop_loss: bool = False) -> None:
         eur_received = amount * sell_price
@@ -267,23 +282,46 @@ class LimitCycleBot(BaseChatBot):
 
     # --- Main loop -------------------------------------------------------
     def run(self) -> None:
-        price = self.fetch_yahoo_price(self.settings.symbol)
-        if price is None:
-            print("Failed to fetch initial price")
-            return
-        self._place_start_orders(price)
-        while True:
+        """Run the trading loop until interrupted."""
+        os.makedirs("log", exist_ok=True)
+        self.log_file_path = os.path.join(
+            "log", f"limit_cycle_{int(self.start_time)}.log"
+        )
+        with open(self.log_file_path, "w") as fh:
+            fh.write("Settings:\n")
+            json.dump(asdict(self.settings), fh, indent=2)
+            fh.write("\n\n")
+
+        reason = "completed"
+        try:
             price = self.fetch_yahoo_price(self.settings.symbol)
             if price is None:
+                print("Failed to fetch initial price")
+                reason = "failed to fetch initial price"
+                return
+            self._place_start_orders(price)
+            while True:
+                price = self.fetch_yahoo_price(self.settings.symbol)
+                if price is None:
+                    time.sleep(self.settings.refresh_rate)
+                    continue
+                self._update_buy_orders(price)
+                self._check_stop_loss(price)
+                self._update_sell_order(price)
+                self.log_counter += 1
+                if self.log_counter % self.settings.log_interval_terminal == 0:
+                    self._log(price, to_terminal=True)
+                if self.log_counter % self.settings.log_interval_file == 0:
+                    self._log(price, to_terminal=False, to_file=True)
                 time.sleep(self.settings.refresh_rate)
-                continue
-            self._update_buy_orders(price)
-            self._check_stop_loss(price)
-            self._update_sell_order(price)
-            self.log_counter += 1
-            if self.log_counter % self.settings.log_interval == 0:
-                self._log(price)
-            time.sleep(self.settings.refresh_rate)
+        except KeyboardInterrupt:
+            reason = "aborted by user"
+        except Exception as exc:
+            reason = f"exception: {exc}"
+            raise
+        finally:
+            with open(self.log_file_path, "a") as fh:
+                fh.write(f"Beendet: {reason}\n")
 
 
 if __name__ == "__main__":
