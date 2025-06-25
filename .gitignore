@@ -16,4 +16,4 @@ data/
 
 # Misc
 *.log
-log/
+log/*.log
