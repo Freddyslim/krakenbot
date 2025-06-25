@@ -55,3 +55,19 @@ python -m modules.chatbot.limit_cycle_bot
 ```
 
 The bot starts with a limit buy order slightly above the current price. After it fills, a stop-loss order is placed immediately. The take-profit sell order is only created once the price first reaches the configured target and then trails the price upwards. Once the position is closed, a new buy order is prepared. Each log output shows the last realised profit and the accumulated *Gesamtgewinn* across all cycles.
+
+## Cycle bot tests
+
+You can run many ``LimitCycleBot`` instances with random settings using the test
+runner. Copy ``config/chatbot/test_runner_settings.json.example`` to
+``config/chatbot/test_runner_settings.json`` and adjust the ``duration`` field:
+
+```json
+{
+    "duration": "1h"
+}
+```
+
+Allowed units are ``m`` (minutes), ``h`` (hours), ``d`` (days), ``w`` (weeks),
+``mo`` (months) and ``y`` (years). Use ``"infinite"`` for an unlimited run.
+Start the tests from the chatbot menu with option ``5``.

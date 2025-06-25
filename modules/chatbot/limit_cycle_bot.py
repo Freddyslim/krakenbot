@@ -362,10 +362,12 @@ class LimitCycleBot(BaseChatBot):
         self,
         max_iterations: int | None = None,
         *,
+        run_seconds: float | None = None,
         log_dir: str = "log",
         log_name: str | None = None,
     ) -> None:
-        """Run the trading loop until interrupted or ``max_iterations`` reached."""
+        """Run the trading loop until interrupted, ``run_seconds`` elapsed or
+        ``max_iterations`` reached."""
         os.makedirs(log_dir, exist_ok=True)
         timestamp = int(self.start_time * 1000)
         filename = log_name or f"limit_cycle_{timestamp}.log"
@@ -377,6 +379,9 @@ class LimitCycleBot(BaseChatBot):
 
         reason = "completed"
         iterations = 0
+        end_time = None
+        if run_seconds is not None:
+            end_time = time.time() + run_seconds
         try:
             price = self._get_price()
             if price is None:
@@ -401,6 +406,9 @@ class LimitCycleBot(BaseChatBot):
                 iterations += 1
                 if max_iterations is not None and iterations >= max_iterations:
                     reason = "max iterations reached"
+                    break
+                if end_time is not None and time.time() >= end_time:
+                    reason = "time limit reached"
                     break
         except KeyboardInterrupt:
             reason = "aborted by user"
