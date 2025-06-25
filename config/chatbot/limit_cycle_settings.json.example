@@ -11,5 +11,6 @@
     "stop_loss_percent": 2.0,
     "debug": true,
     "log_interval_terminal": 1,
-    "log_interval_file": 1
+    "log_interval_file": 1,
+    "auto_log": true
 }
