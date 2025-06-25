@@ -16,6 +16,8 @@ Copy `config/chatbot/limit_cycle_settings.json.example` to `config/chatbot/limit
     "take_profit_percent": 0.8,
     "buyback_percent": 0.5,
     "safety_offset": 0.15,
+    "enable_stop_loss": false,
+    "stop_loss_percent": 2.0,
     "debug": true,
     "log_interval": 1
 }
@@ -25,12 +27,14 @@ Copy `config/chatbot/limit_cycle_settings.json.example` to `config/chatbot/limit
 
 - **symbol** – Ticker symbol used for price retrieval via Yahoo Finance.
 - **refresh_rate** – Seconds between price checks.
-- **startbuy_threshold** – Percentage difference between the two initial buy orders.
+- **startbuy_threshold** – Percentage above the current price for the initial buy order.
 - **initial_portfolio_eur** – Euro amount used for the very first trade.
 - **reinvestment_percent** – Percentage of the current portfolio that is reinvested after each completed cycle.
 - **take_profit_percent** – Profit target above the last buy price before a sell order is placed.
 - **buyback_percent** – Price drop below the last sell price before a new buy is placed.
 - **safety_offset** – Offset applied to limit orders to increase the chance of execution.
+- **enable_stop_loss** – If `true`, the bot places a stop-loss order after each buy.
+- **stop_loss_percent** – Distance below the buy price at which the stop-loss triggers.
 - **debug** – If `true`, the bot prints all status information to the console.
 - **log_interval** – Number of refresh cycles between log outputs.
 
@@ -42,4 +46,4 @@ Start the chatbot menu and select the LimitCycleBot or run it directly:
 python -m modules.chatbot.limit_cycle_bot
 ```
 
-The bot places two initial limit buy orders slightly above and below the current price. After one fills, it sets a take-profit sell order and later a new buy order. Each log output also shows the last realised profit once a full buy/sell cycle was completed.
+The bot starts with a limit buy order slightly above the current price. After it fills, a take-profit sell order and an optional stop-loss are placed. Once the position is closed, a new buy order is prepared. Each log output also shows the last realised profit once a full buy/sell cycle was completed.

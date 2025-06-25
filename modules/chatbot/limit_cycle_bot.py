@@ -22,6 +22,8 @@ class CycleSettings:
     take_profit_percent: float = 0.8  # target profit before selling
     buyback_percent: float = 0.5  # drop from sell price before rebuy
     safety_offset: float = 0.15  # margin on limit orders
+    enable_stop_loss: bool = False  # activate stop-loss handling
+    stop_loss_percent: float = 2.0  # loss threshold relative to buy price
     debug: bool = True  # print debug information
     log_interval: int = 1  # number of refresh cycles between log output
 
@@ -59,6 +61,7 @@ class LimitCycleBot(BaseChatBot):
         self.open_buy_low: Optional[LimitOrder] = None
         self.open_buy_high: Optional[LimitOrder] = None
         self.open_sell: Optional[LimitOrder] = None
+        self.open_stop_loss: Optional[LimitOrder] = None
         self.high_since_buy: Optional[float] = None
         self.low_since_sell: Optional[float] = None
         self.start_time = time.time()
@@ -66,6 +69,8 @@ class LimitCycleBot(BaseChatBot):
 
     # --- Helpers ---------------------------------------------------------
     def _waiting_for(self) -> str:
+        if self.open_stop_loss:
+            return f"stop loss <= {self.open_stop_loss.price:.4f} €"
         if self.open_sell:
             return f"sell >= {self.open_sell.price:.4f} €"
         if self.open_buy_low and self.open_buy_high:
@@ -95,7 +100,7 @@ class LimitCycleBot(BaseChatBot):
             lines.append(f"Bestand:            {self.asset_balance:.8f} {asset}")
         if self.last_buy_price:
             lines.append(f"Letzter Kaufkurs:    {self.last_buy_price:.4f} €")
-        if self.open_sell or self.open_buy_low:
+        if self.open_sell or self.open_buy_low or self.open_stop_loss:
             lines.append("")
             lines.append("Offene Orders:")
             if self.open_sell:
@@ -104,6 +109,10 @@ class LimitCycleBot(BaseChatBot):
                 )
             if self.open_buy_low:
                 lines.append(f"  – Buy @ {self.open_buy_low.price:.4f} € (Rebuy)")
+            if self.open_stop_loss:
+                lines.append(
+                    f"  – Stop @ {self.open_stop_loss.price:.4f} € (Stop Loss)"
+                )
         lines.append(f"Warte auf: {self._waiting_for()}")
         if self.settings.debug:
             print("\n".join(lines))
@@ -116,18 +125,55 @@ class LimitCycleBot(BaseChatBot):
                     f"  Gewinn: {lp['profit_eur']:+.2f} € ({lp['profit_pct']:+.2f} %)"
                 )
 
+    def _execute_sell(self, sell_price: float, amount: float, stop_loss: bool = False) -> None:
+        eur_received = amount * sell_price
+        self.eur_balance += eur_received
+        self.asset_balance = 0.0
+        buy_eur = self.current_buy_amount
+        profit_eur = eur_received - buy_eur
+        profit_pct = profit_eur / buy_eur * 100
+        self.last_profit = {
+            "buy_eur": buy_eur,
+            "buy_price": self.last_buy_price,
+            "sell_eur": eur_received,
+            "sell_price": sell_price,
+            "profit_eur": profit_eur,
+            "profit_pct": profit_pct,
+            "stop_loss": stop_loss,
+        }
+        msg = (
+            f"STOP LOSS triggered at {sell_price:.4f} €"
+            if stop_loss
+            else f"SELL executed at {sell_price:.4f} € for {eur_received:.2f} €"
+        )
+        if self.settings.debug:
+            lib.highlight_message(msg)
+        self.open_sell = None
+        self.open_stop_loss = None
+        self.high_since_buy = None
+        self.current_buy_amount = (
+            (self.eur_balance) * self.settings.reinvestment_percent / 100
+        )
+        target_price = sell_price * (1 - self.settings.buyback_percent / 100)
+        buy_price = target_price * (1 + self.settings.safety_offset / 100)
+        amount = self.current_buy_amount / buy_price
+        self.open_buy_low = LimitOrder("buy", buy_price, amount)
+        if self.settings.debug:
+            lib.highlight_message(
+                f"Next buy order placed at {buy_price:.4f} € for {self.current_buy_amount:.2f} €"
+            )
+
     def _place_start_orders(self, price: float) -> None:
-        diff = self.settings.startbuy_threshold / 100 / 2
-        low_price = price * (1 - diff)
+        diff = self.settings.startbuy_threshold / 100
         high_price = price * (1 + diff)
         amount = self.current_buy_amount / price
-        self.open_buy_low = LimitOrder("buy", low_price, amount)
+        self.open_buy_low = None
         self.open_buy_high = LimitOrder("buy", high_price, amount)
         self.high_since_buy = None
         self.low_since_sell = None
         if self.settings.debug:
             lib.highlight_message(
-                f"Initial buy orders placed at {low_price:.4f} and {high_price:.4f} €"
+                f"Initial buy order placed at {high_price:.4f} €"
             )
 
     def _update_sell_order(self, price: float) -> None:
@@ -143,41 +189,15 @@ class LimitCycleBot(BaseChatBot):
                     )
                 self.open_sell.price = new_price
         if price >= self.open_sell.price:
-            # execute sell
-            sell_price = self.open_sell.price
-            amount = self.open_sell.amount
-            eur_received = amount * sell_price
-            self.eur_balance += eur_received
-            self.asset_balance = 0.0
-            buy_eur = self.current_buy_amount
-            profit_eur = eur_received - buy_eur
-            profit_pct = profit_eur / buy_eur * 100
-            self.last_profit = {
-                "buy_eur": buy_eur,
-                "buy_price": self.last_buy_price,
-                "sell_eur": eur_received,
-                "sell_price": sell_price,
-                "profit_eur": profit_eur,
-                "profit_pct": profit_pct,
-            }
-            if self.settings.debug:
-                lib.highlight_message(
-                    f"SELL executed at {sell_price:.4f} € for {eur_received:.2f} €"
-                )
-            self.open_sell = None
-            self.high_since_buy = None
-            # prepare next buy amount
-            self.current_buy_amount = (
-                (self.eur_balance) * self.settings.reinvestment_percent / 100
+            self._execute_sell(self.open_sell.price, self.open_sell.amount)
+
+    def _check_stop_loss(self, price: float) -> None:
+        if not (self.settings.enable_stop_loss and self.open_stop_loss):
+            return
+        if price <= self.open_stop_loss.price:
+            self._execute_sell(
+                self.open_stop_loss.price, self.open_stop_loss.amount, stop_loss=True
             )
-            target_price = sell_price * (1 - self.settings.buyback_percent / 100)
-            buy_price = target_price * (1 + self.settings.safety_offset / 100)
-            amount = self.current_buy_amount / buy_price
-            self.open_buy_low = LimitOrder("buy", buy_price, amount)
-            if self.settings.debug:
-                lib.highlight_message(
-                    f"Next buy order placed at {buy_price:.4f} € for {self.current_buy_amount:.2f} €"
-                )
 
     def _update_buy_orders(self, price: float) -> None:
         if self.open_buy_low and price < self.open_buy_low.price:
@@ -202,35 +222,48 @@ class LimitCycleBot(BaseChatBot):
                 )
             self.open_buy_low = None
             self.open_buy_high = None
-            # create sell order
             target_price = buy_price * (1 + self.settings.take_profit_percent / 100)
             sell_price = target_price * (1 - self.settings.safety_offset / 100)
             self.open_sell = LimitOrder("sell", sell_price, amount)
+            if self.settings.enable_stop_loss:
+                stop_price = buy_price * (1 - self.settings.stop_loss_percent / 100)
+                self.open_stop_loss = LimitOrder("sell", stop_price, amount)
             if self.settings.debug:
                 lib.highlight_message(
                     f"Sell order placed at {sell_price:.4f} € for target profit"
                 )
-        elif self.open_buy_high and price >= self.open_buy_high.price:
-            # execute high buy order
-            buy_price = self.open_buy_high.price
-            amount = self.open_buy_high.amount
-            cost = buy_price * amount
-            self.eur_balance -= cost
-            self.asset_balance += amount
-            self.last_buy_price = buy_price
-            if self.settings.debug:
-                lib.highlight_message(
-                    f"BUY executed at {buy_price:.4f} € for {cost:.2f} €"
-                )
-            self.open_buy_low = None
-            self.open_buy_high = None
-            target_price = buy_price * (1 + self.settings.take_profit_percent / 100)
-            sell_price = target_price * (1 - self.settings.safety_offset / 100)
-            self.open_sell = LimitOrder("sell", sell_price, amount)
-            if self.settings.debug:
-                lib.highlight_message(
-                    f"Sell order placed at {sell_price:.4f} € for target profit"
-                )
+        elif self.open_buy_high:
+            if price < self.open_buy_high.price:
+                new_price = price * (1 + self.settings.safety_offset / 100)
+                if new_price < self.open_buy_high.price:
+                    if self.settings.debug:
+                        print(
+                            f"Adjusting buy order from {self.open_buy_high.price:.4f} to {new_price:.4f} €"
+                        )
+                    self.open_buy_high.price = new_price
+            if price >= self.open_buy_high.price:
+                buy_price = self.open_buy_high.price
+                amount = self.open_buy_high.amount
+                cost = buy_price * amount
+                self.eur_balance -= cost
+                self.asset_balance += amount
+                self.last_buy_price = buy_price
+                if self.settings.debug:
+                    lib.highlight_message(
+                        f"BUY executed at {buy_price:.4f} € for {cost:.2f} €"
+                    )
+                self.open_buy_low = None
+                self.open_buy_high = None
+                target_price = buy_price * (1 + self.settings.take_profit_percent / 100)
+                sell_price = target_price * (1 - self.settings.safety_offset / 100)
+                self.open_sell = LimitOrder("sell", sell_price, amount)
+                if self.settings.enable_stop_loss:
+                    stop_price = buy_price * (1 - self.settings.stop_loss_percent / 100)
+                    self.open_stop_loss = LimitOrder("sell", stop_price, amount)
+                if self.settings.debug:
+                    lib.highlight_message(
+                        f"Sell order placed at {sell_price:.4f} € for target profit"
+                    )
 
     # --- Main loop -------------------------------------------------------
     def run(self) -> None:
@@ -245,6 +278,7 @@ class LimitCycleBot(BaseChatBot):
                 time.sleep(self.settings.refresh_rate)
                 continue
             self._update_buy_orders(price)
+            self._check_stop_loss(price)
             self._update_sell_order(price)
             self.log_counter += 1
             if self.log_counter % self.settings.log_interval == 0:
