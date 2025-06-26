@@ -15,6 +15,7 @@ def run() -> None:
     print("4. Run limit cycle bot")
     print("5. Run cycle bot tests")
     print("6. Evaluate cycle bot logs")
+    print("7. Run cycle backtest")
     print("99. Back")
     choice = input("Option: ") or "99"
     if choice == "1":
@@ -61,5 +62,9 @@ def run() -> None:
 
         num = input("Number of results (default 5): ") or "5"
         find_best(int(num))
+    elif choice == "7":
+        from .cycle_backtest import run_backtest
+
+        run_backtest()
 
 
