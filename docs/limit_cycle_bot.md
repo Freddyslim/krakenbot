@@ -69,3 +69,22 @@ runner. Copy ``config/chatbot/test_runner_settings.json.example`` to
 Allowed units are ``m`` (minutes), ``h`` (hours), ``d`` (days), ``w`` (weeks),
 ``mo`` (months) and ``y`` (years). Use ``"infinite"`` for an unlimited run.
 Start the tests from the chatbot menu with option ``5``.
+
+## Historical simulation
+
+The ``BacktestLimitCycleBot`` runs the cycle strategy against saved price data and
+tries multiple parameter combinations. Copy
+``config/chatbot/cycle_backtest_settings.json.example`` to
+``config/chatbot/cycle_backtest_settings.json`` and adjust the values. Provide a
+CSV file via the ``data_file`` field containing ``time`` and ``close`` columns.
+Ranges for the tested settings use objects with ``start``, ``end`` and ``step``
+or a list of explicit values.
+
+Start the backtest with:
+
+```bash
+python -m modules.chatbot.cycle_backtest
+```
+
+Logs are written to ``log/test/`` and ``summary.log`` lists all profits along
+with the top five configurations.
