@@ -72,13 +72,13 @@ Start the tests from the chatbot menu with option ``5``.
 
 ## Historical simulation
 
-The ``BacktestLimitCycleBot`` runs the cycle strategy against saved price data and
-tries multiple parameter combinations. Copy
+The ``BacktestLimitCycleBot`` runs the cycle strategy against historical prices
+loaded directly from Kraken. Copy
 ``config/chatbot/cycle_backtest_settings.json.example`` to
-``config/chatbot/cycle_backtest_settings.json`` and adjust the values. Provide a
-CSV file via the ``data_file`` field containing ``time`` and ``close`` columns.
-Ranges for the tested settings use objects with ``start``, ``end`` and ``step``
-or a list of explicit values.
+``config/chatbot/cycle_backtest_settings.json`` and adjust the values. The bot
+queries OHLC data for the configured pair and interval, so no CSV file is
+required. Ranges for the tested settings use objects with ``start``, ``end`` and
+``step`` or a list of explicit values.
 
 Start the backtest with:
 

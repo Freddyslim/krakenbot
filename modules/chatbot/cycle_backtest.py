@@ -4,6 +4,9 @@ import itertools
 from typing import Iterable, List, Dict, Any
 
 import pandas as pd
+import requests
+
+from lib import kraken_api
 
 from .limit_cycle_bot import LimitCycleBot, CycleSettings
 
@@ -77,17 +80,23 @@ class BacktestLimitCycleBot(LimitCycleBot):
         return price
 
 
-def _load_prices(path: str, duration: float | None) -> List[float]:
-    df = pd.read_csv(path)
-    if "time" in df.columns:
-        df["time"] = pd.to_datetime(df["time"])
-        if duration is not None:
-            end = df["time"].max()
-            start = end - pd.Timedelta(seconds=duration)
-            df = df[df["time"] >= start]
-    if "close" in df.columns:
-        return df["close"].tolist()
-    return df.iloc[:, -1].tolist()
+def _load_prices(pair: str, interval: int, duration: float | None) -> List[float]:
+    """Return close prices fetched from Kraken's OHLC endpoint."""
+    since = None
+    if duration is not None:
+        since = int((pd.Timestamp.utcnow() - pd.Timedelta(seconds=duration)).timestamp())
+    try:
+        resp = kraken_api.ohlc(pair, interval=interval, since=since)
+    except requests.RequestException:
+        return []
+    data = resp.get("result", {}).get(pair)
+    if not data:
+        return []
+    df = pd.DataFrame(
+        data,
+        columns=["time", "open", "high", "low", "close", "vwap", "volume", "count"],
+    )
+    return df["close"].astype(float).tolist()
 
 
 def run_backtest(settings_file: str = "config/chatbot/cycle_backtest_settings.json") -> None:
@@ -95,14 +104,9 @@ def run_backtest(settings_file: str = "config/chatbot/cycle_backtest_settings.js
         cfg = json.load(fh)
 
     duration = _parse_duration(str(cfg.get("duration", "")))
-    data_file = cfg.get("data_file")
-    if not data_file:
-        print("No data_file specified in settings")
-        return
-    if not os.path.exists(data_file):
-        print(f"Data file {data_file} not found")
-        return
-    prices = _load_prices(data_file, duration)
+    pair = cfg.get("pair", "XBTEUR")
+    interval = int(cfg.get("interval", 60))
+    prices = _load_prices(pair, interval, duration)
     if not prices:
         print("No price data loaded")
         return
