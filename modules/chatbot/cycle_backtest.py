@@ -115,6 +115,12 @@ def _load_prices(pair: str, interval: int, duration: float | None) -> List[float
 
         result = resp.get("result", {})
         data = result.get(pair)
+        if data is None:
+            # some pairs are returned with asset class prefixes (e.g. XXBTZEUR)
+            for key, val in result.items():
+                if key != "last":
+                    data = val
+                    break
         if not data:
             break
 
