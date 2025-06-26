@@ -95,15 +95,18 @@ def _load_prices(pair: str, interval: int, duration: float | None) -> List[float
         f"{pair}_{interval}.csv",
     )
 
-    if os.path.exists(cache_file):
-        df = pd.read_csv(cache_file)
-        return df["close"].astype(float).tolist()
-
     since = None
     if duration is not None:
         since = int(
             (pd.Timestamp.utcnow() - pd.Timedelta(seconds=duration)).timestamp()
         )
+
+    if os.path.exists(cache_file):
+        df = pd.read_csv(cache_file)
+        earliest = int(df["time"].iloc[0])
+        if since is None or earliest <= since:
+            return df["close"].astype(float).tolist()
+        # cached data does not cover requested period -> refresh
 
     all_frames: List[pd.DataFrame] = []
     last = since
