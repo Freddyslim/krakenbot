@@ -9,6 +9,8 @@ config/api/withdraw_db.json
 config/chatbot/elliott_wave_settings.json
 config/chatbot/live_trader_settings.json
 config/chatbot/limit_cycle_settings.json
+config/chatbot/cycle_backtest_settings.json
+
 
 # Ignore generated output and data files
 output/
