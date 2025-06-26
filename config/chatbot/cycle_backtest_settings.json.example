@@ -13,6 +13,6 @@
     "log_interval_terminal": 1,
     "log_interval_file": 1,
     "auto_log": true,
-    "data_file": "data/prices.csv",
+    "interval": 60,
     "duration": "1w"
 }
