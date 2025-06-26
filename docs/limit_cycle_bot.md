@@ -79,7 +79,8 @@ loaded from Kraken. Because only a limited amount of data can be fetched per
 request, the backtest repeatedly queries OHLC values using the ``since``
 parameter until the entire period is downloaded. The results are cached in the
 ``historical_data/`` directory. On subsequent runs the data is read from the
-cache so no additional API calls are necessary. Copy
+cache so no additional API calls are necessary. If the configured duration
+exceeds the cached range the data is downloaded again automatically. Copy
 ``config/chatbot/cycle_backtest_settings.json.example`` to
 ``config/chatbot/cycle_backtest_settings.json`` and adjust the values. Ranges
 for the tested settings use objects with ``start``, ``end`` and ``step`` or a
