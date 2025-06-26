@@ -15,6 +15,7 @@ config/chatbot/cycle_backtest_settings.json
 # Ignore generated output and data files
 output/
 data/
+historical_data/
 
 # Misc
 *.log
