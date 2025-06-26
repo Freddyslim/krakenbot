@@ -9,6 +9,7 @@
     "safety_offset": 0.15,
     "enable_stop_loss": false,
     "stop_loss_percent": 2.0,
+    "est_trading_fee": 0.26,
     "debug": true,
     "log_interval_terminal": 1,
     "log_interval_file": 1,
