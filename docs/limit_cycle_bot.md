@@ -20,6 +20,7 @@ Copy `config/chatbot/limit_cycle_settings.json.example` to `config/chatbot/limit
     "safety_offset": 0.15,
     "enable_stop_loss": false,
     "stop_loss_percent": 2.0,
+    "est_trading_fee": 0.26,
     "debug": true,
     "log_interval_terminal": 1,
     "log_interval_file": 1,
@@ -39,6 +40,7 @@ Copy `config/chatbot/limit_cycle_settings.json.example` to `config/chatbot/limit
 - **safety_offset** – Offset applied to limit orders to increase the chance of execution.
 - **enable_stop_loss** – If `true`, the bot places a stop-loss order after each buy.
 - **stop_loss_percent** – Distance below the buy price at which the stop-loss triggers.
+- **est_trading_fee** – Estimated trading fee percentage deducted from each buy and sell.
 - **debug** – If `true`, the bot prints all status information to the console.
 - **log_interval_terminal** – Number of refresh cycles between terminal log outputs.
 - **log_interval_file** – Number of refresh cycles between file log entries.

@@ -25,6 +25,7 @@ class CycleSettings:
     safety_offset: float = 0.15  # margin on limit orders
     enable_stop_loss: bool = False  # activate stop-loss handling
     stop_loss_percent: float = 2.0  # loss threshold relative to buy price
+    est_trading_fee: float = 0.26  # estimated trading fee percentage
     debug: bool = True  # print debug information
     log_interval_terminal: int = (
         1  # number of refresh cycles between terminal log output
@@ -205,10 +206,11 @@ class LimitCycleBot(BaseChatBot):
         self, sell_price: float, amount: float, stop_loss: bool = False
     ) -> None:
         eur_received = amount * sell_price
-        self.eur_balance += eur_received
+        sell_fee = eur_received * self.settings.est_trading_fee / 100
+        self.eur_balance += eur_received - sell_fee
         self.asset_balance = 0.0
         buy_eur = self.current_buy_amount
-        profit_eur = eur_received - buy_eur
+        profit_eur = eur_received - sell_fee - buy_eur
         profit_pct = profit_eur / buy_eur * 100
         self.total_profit += profit_eur
         self.last_profit = {
@@ -307,10 +309,12 @@ class LimitCycleBot(BaseChatBot):
             buy_price = self.open_buy_low.price
             amount = self.open_buy_low.amount
             cost = buy_price * amount
-            self.eur_balance -= cost
+            buy_fee = cost * self.settings.est_trading_fee / 100
+            self.eur_balance -= cost + buy_fee
             self.asset_balance += amount
             self.last_buy_price = buy_price
             self.high_since_buy = buy_price
+            self.current_buy_amount = cost + buy_fee
             if self.settings.debug:
                 lib.highlight_message(
                     f"BUY executed at {buy_price:.4f} € for {cost:.2f} €"
@@ -333,10 +337,12 @@ class LimitCycleBot(BaseChatBot):
                 buy_price = self.open_buy_high.price
                 amount = self.open_buy_high.amount
                 cost = buy_price * amount
-                self.eur_balance -= cost
+                buy_fee = cost * self.settings.est_trading_fee / 100
+                self.eur_balance -= cost + buy_fee
                 self.asset_balance += amount
                 self.last_buy_price = buy_price
                 self.high_since_buy = buy_price
+                self.current_buy_amount = cost + buy_fee
                 if self.settings.debug:
                     lib.highlight_message(
                         f"BUY executed at {buy_price:.4f} € for {cost:.2f} €"
