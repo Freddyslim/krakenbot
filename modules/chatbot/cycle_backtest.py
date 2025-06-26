@@ -81,22 +81,69 @@ class BacktestLimitCycleBot(LimitCycleBot):
 
 
 def _load_prices(pair: str, interval: int, duration: float | None) -> List[float]:
-    """Return close prices fetched from Kraken's OHLC endpoint."""
+    """Return close prices fetched from Kraken's OHLC endpoint.
+
+    The OHLC endpoint returns a limited number of data points. When a duration
+    is provided we repeatedly request data using the ``since`` parameter until
+    the full period is covered. The downloaded prices are cached in
+    ``historical_data/`` so subsequent runs do not hit the API again.
+    """
+
+    os.makedirs("historical_data", exist_ok=True)
+    cache_file = os.path.join(
+        "historical_data",
+        f"{pair}_{interval}.csv",
+    )
+
+    if os.path.exists(cache_file):
+        df = pd.read_csv(cache_file)
+        return df["close"].astype(float).tolist()
+
     since = None
     if duration is not None:
-        since = int((pd.Timestamp.utcnow() - pd.Timedelta(seconds=duration)).timestamp())
-    try:
-        resp = kraken_api.ohlc(pair, interval=interval, since=since)
-    except requests.RequestException:
+        since = int(
+            (pd.Timestamp.utcnow() - pd.Timedelta(seconds=duration)).timestamp()
+        )
+
+    all_frames: List[pd.DataFrame] = []
+    last = since
+    while True:
+        try:
+            resp = kraken_api.ohlc(pair, interval=interval, since=last)
+        except requests.RequestException:
+            break
+
+        result = resp.get("result", {})
+        data = result.get(pair)
+        if not data:
+            break
+
+        df = pd.DataFrame(
+            data,
+            columns=[
+                "time",
+                "open",
+                "high",
+                "low",
+                "close",
+                "vwap",
+                "volume",
+                "count",
+            ],
+        )
+        all_frames.append(df)
+
+        new_last = result.get("last")
+        if new_last is None or new_last == last:
+            break
+        last = new_last
+
+    if not all_frames:
         return []
-    data = resp.get("result", {}).get(pair)
-    if not data:
-        return []
-    df = pd.DataFrame(
-        data,
-        columns=["time", "open", "high", "low", "close", "vwap", "volume", "count"],
-    )
-    return df["close"].astype(float).tolist()
+
+    df_all = pd.concat(all_frames, ignore_index=True)
+    df_all.to_csv(cache_file, index=False)
+    return df_all["close"].astype(float).tolist()
 
 
 def run_backtest(settings_file: str = "config/chatbot/cycle_backtest_settings.json") -> None:

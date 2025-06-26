@@ -80,6 +80,10 @@ Generated data such as CSV exports is stored in the `output/` directory. The
 folder only contains a `readme.md` placeholder by default and will be populated
 once modules are executed.
 
+Historical price downloads used by the cycle backtest are cached in the
+`historical_data/` folder. The files are created automatically on first use so
+multiple backtest runs do not repeatedly query the Kraken API.
+
 ## Telegram Bot
 
 The Telegram bot allows read-only access to your Kraken account. After
