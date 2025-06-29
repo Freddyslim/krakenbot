@@ -5,7 +5,6 @@ import json
 import pandas as pd
 import os
 import sys
-from PyQt5.QtWidgets import QApplication, QFileDialog
 ### self created
 lib_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, lib_path)
@@ -252,12 +251,11 @@ def load_json_file(filename, path_to_folder):
         with open(filename, "r") as f:
             data = json.load(f)
     else:
-        # Die Datei ist nicht vorhanden, also wird sie erstellt und mit einem leeren Dictionary initialisiert
+        # Die Datei ist nicht vorhanden, also wird sie erstellt
         data = {}
+        with open(filename, "w") as f:
+            json.dump(data, f, indent=4)
 
-    # Schreiben Sie das aktualisierte Dictionary in die Datei
-    with open(filename, "w") as f:
-        json.dump(data, f, indent=4)
             
     return data, filename
 
