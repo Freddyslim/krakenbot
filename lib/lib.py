@@ -5,7 +5,6 @@ import json
 import pandas as pd
 import os
 import sys
-from PyQt5.QtWidgets import QApplication, QFileDialog
 ### self created
 lib_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, lib_path)
